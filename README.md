@@ -29,23 +29,45 @@ As of now, Kagami is only compatible with Minecraft 1.8.9, it might get support 
 
 ## Example
 
-This is a simple example of a handler that modifies a message sent by the client:
+This is a simple example of a handler that interacts with chat messages sent by the client:
 
 ```rust
 mc.handlers.add_write_handler(|packet: &mut client::Chat| {
     Box::pin(async move {
-        packet.message = "I never said that!".into();
+        // Edit the message if it contains "foo"
+        if packet.message.contains("foo") {
+            packet.message = "I never said that!".into();
+            return PacketAction::Edit;
+        }
+
+        // Do not send the packet to the server if it contains "bar"
+        else if packet.message.contains("bar") {
+            return PacketAction::Filter;
+        }
+
+        // Send the packet to the server
+        PacketAction::Default
     })
 });
 ```
 
-This is a simple example of a handler that reads the content of a packet:
+The read handlers are used to read packets from the server. They are triggered after a packet has been received and sent to the client. This means it is too late to modify the packet but it can still be read without adding any delay. If a packet is not modified, this should be used.
 
 ```rust
 mc.handlers.add_read_handler(|packet: &client::WindowClick| {
     Box::pin(async move { println!("Slot clicked: {:#?}", packet.item) })
 });
 ```
+
+## Actions
+
+Actions are used to tell the proxy what to do with a packet.
+
+Filter will remove the packet from the buffer, so it is not sent to the destination.
+Edit will serialize the new version of the packet and replace the original one in the buffer.
+Default will do nothing to the buffer.
+
+This is a simple example of a handler that reads the content of a packet:
 
 ## Limitations
 
