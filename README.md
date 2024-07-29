@@ -53,6 +53,8 @@ mc.handlers.add_write_handler(|packet: &mut client::Chat| {
 
 The read handlers are used to read packets from the server. They are triggered after a packet has been received and sent to the client. This means it is too late to modify the packet but it can still be read without adding any delay. If a packet is not modified, this should be used.
 
+This is a simple example of a handler that reads the content of a packet:
+
 ```rust
 mc.handlers.add_read_handler(|packet: &client::WindowClick| {
     Box::pin(async move { println!("Slot clicked: {:#?}", packet.item) })
@@ -66,8 +68,6 @@ Actions are used to tell the proxy what to do with a packet.
 Filter will remove the packet from the buffer, so it is not sent to the destination.
 Edit will serialize the new version of the packet and replace the original one in the buffer.
 Default will do nothing to the buffer.
-
-This is a simple example of a handler that reads the content of a packet:
 
 ## Limitations
 
