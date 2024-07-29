@@ -35,7 +35,6 @@ This is a simple example of a handler that modifies a message sent by the client
 mc.handlers.add_write_handler(|packet: &mut client::Chat| {
     Box::pin(async move {
         packet.message = "I never said that!".into();
-        packet.to_owned()
     })
 });
 ```
