@@ -1,0 +1,11 @@
+[package]
+name = "kagami"
+version = "0.0.1"
+authors = ["Oery"]
+edition = "2021"
+description = "A Minecraft network based modding interface"
+repository = "https://github.com/oery/kagami"
+keywords = ["minecraft", "modding", "network", "proxy"]
+categories = ["game-development", "network-programming"]
+
+[dependencies]
