@@ -7,5 +7,6 @@ description = "A Minecraft network based modding interface"
 repository = "https://github.com/oery/kagami"
 keywords = ["minecraft", "modding", "network", "proxy"]
 categories = ["game-development", "network-programming"]
+license = "MIT"
 
 [dependencies]
