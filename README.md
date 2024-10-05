@@ -6,8 +6,9 @@ Kagami is a Minecraft proxy featuring a simple and easy to use API to modify and
 
 ## What can I do with this ?
 
-Since it acts as a server between your client and the server, you can do pretty much anything the server can make you do, this includes :
+Since it acts as a server between your client and the server, you can do pretty much anything the server can do, this includes :
 
+- Plugins
 - Visual Modifications
 - Integrations with other apps
 - Custom Commands
@@ -32,22 +33,24 @@ As of now, Kagami is only compatible with Minecraft 1.8.9, it might get support 
 This is a simple example of a handler that interacts with chat messages sent by the client:
 
 ```rust
-mc.handlers.add_write_handler(|packet: &mut client::Chat| {
-    Box::pin(async move {
-        // Edit the message if it contains "foo"
-        if packet.message.contains("foo") {
-            packet.message = "I never said that!".into();
-            return PacketAction::Edit;
-        }
+proxy.register_callback(|chat: &mut client::Chat| {
+    // Edit the message if it contains "foo"
+    if chat.message.contains("foo") {
+        chat.message = "I never said that!".into();
+        return PacketAction::Edit;
+    }
 
-        // Do not send the packet to the server if it contains "bar"
-        else if packet.message.contains("bar") {
-            return PacketAction::Filter;
-        }
+    // Do not send the packet to the server if it contains "bar"
+    else if chat.message.contains("bar") {
+        return PacketAction::Filter;
+    }
 
-        // Send the packet to the server
-        PacketAction::Default
-    })
+    // Send the packet to the server
+    PacketAction::Default
+});
+
+proxy.register_callback(|chat: &Chat| {
+    println!("You said: {}", chat.message);
 });
 ```
 
@@ -56,8 +59,8 @@ The read handlers are used to read packets from the server. They are triggered a
 This is a simple example of a handler that reads the content of a packet:
 
 ```rust
-mc.handlers.add_read_handler(|packet: &client::WindowClick| {
-    Box::pin(async move { println!("Slot clicked: {:#?}", packet.item) })
+proxy.register_callback(|window: &client::WindowClick| {
+    println!("Slot clicked: {:#?}", window.item);
 });
 ```
 
@@ -75,7 +78,7 @@ Since each app built using Kagami is one proxy, it is very unefficient to use mu
 
 ### Roadmap
 
-- [ ] State management
+- [x] State management
 - [x] Reading basic packets
 - [x] Reading packets with NBT Data
 - [x] Serializing basic packets
