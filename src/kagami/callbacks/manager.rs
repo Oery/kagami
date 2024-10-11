@@ -20,10 +20,9 @@ impl CallbackManager {
         callback: impl Fn(&mut T) -> Actions + 'static + Sync + Send,
     ) {
         let boxed_callback = Box::new(move |packet: &mut dyn AnyPacket| -> Actions {
-            if let Some(concrete_packet) = packet.as_any_mut().downcast_mut::<T>() {
-                callback(concrete_packet)
-            } else {
-                Actions::Transfer
+            match packet.as_any_mut().downcast_mut::<T>() {
+                Some(concrete_packet) => callback(concrete_packet),
+                None => Actions::Transfer,
             }
         });
 
