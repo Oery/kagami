@@ -6,6 +6,7 @@ use crate::kagami::callbacks::manager::CallbackManager;
 use crate::minecraft::AnyPacket;
 use crate::tcp::connection::handle_client_conn;
 
+use callbacks::Actions;
 use tokio::net::TcpListener;
 
 pub struct Kagami {
@@ -25,7 +26,7 @@ impl Kagami {
 
     pub fn register_callback<T: AnyPacket + 'static>(
         &mut self,
-        callback: impl Fn(&T) + Send + Sync + 'static,
+        callback: impl Fn(&T) -> Actions + Send + Sync + 'static,
     ) {
         self.callbacks.register(callback);
     }

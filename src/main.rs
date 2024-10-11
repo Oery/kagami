@@ -19,8 +19,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let mut proxy = Kagami::new(remote_addr);
 
-    proxy.register_callback(|chat: &play::client::Chat| {
-        println!("You said: {}", chat.message);
+    proxy.register_callback(|packet: &play::server::Login| {
+        dbg!(packet);
+
+        kagami::callbacks::Actions::Filter
     });
 
     proxy.run().await?;

@@ -1,2 +1,6 @@
+mod actions;
 pub mod manager;
-pub mod type_id_map;
+mod type_id_map;
+
+pub use actions::*;
+pub use type_id_map::*;

@@ -1,4 +1,4 @@
-use crate::kagami::callbacks::type_id_map::TypeIdMap;
+use crate::kagami::callbacks::{Actions, TypeIdMap};
 use crate::minecraft::AnyPacket;
 use crate::serialization::deserialize_any;
 use crate::tcp::{Origin, State};
@@ -6,7 +6,7 @@ use crate::tcp::{Origin, State};
 use std::any::TypeId;
 use std::collections::HashMap;
 
-type CallbackFn = Box<dyn Fn(&dyn AnyPacket) + Sync + Send>;
+type CallbackFn = Box<dyn Fn(&dyn AnyPacket) -> Actions + Sync + Send>;
 
 #[derive(Default)]
 pub struct CallbackManager {
@@ -17,11 +17,13 @@ pub struct CallbackManager {
 impl CallbackManager {
     pub fn register<T: AnyPacket + 'static>(
         &mut self,
-        callback: impl Fn(&T) + 'static + Sync + Send,
+        callback: impl Fn(&T) -> Actions + 'static + Sync + Send,
     ) {
-        let boxed_callback = Box::new(move |packet: &dyn AnyPacket| {
+        let boxed_callback = Box::new(move |packet: &dyn AnyPacket| -> Actions {
             if let Some(concrete_packet) = packet.as_any().downcast_ref::<T>() {
-                callback(concrete_packet);
+                callback(concrete_packet)
+            } else {
+                Actions::Transfer
             }
         });
 
