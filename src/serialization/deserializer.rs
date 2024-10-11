@@ -111,6 +111,22 @@ impl Deserialize for crate::tcp::State {
     }
 }
 
+use crate::minecraft::packets::play::server::ChatPosition;
+
+impl Deserialize for ChatPosition {
+    fn deserialize<R: Read>(reader: &mut R) -> io::Result<Self> {
+        match deserialize_varint(reader)? {
+            1 => Ok(ChatPosition::Chat),
+            2 => Ok(ChatPosition::Hotbar),
+            4 => Ok(ChatPosition::System),
+            _ => Err(io::Error::new(
+                io::ErrorKind::InvalidData,
+                "Invalid chat position",
+            )),
+        }
+    }
+}
+
 pub fn deserialize<D>(bytes: &[u8]) -> io::Result<D>
 where
     D: Deserialize,

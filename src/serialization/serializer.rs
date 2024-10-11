@@ -108,6 +108,18 @@ impl Serialize for crate::tcp::State {
     }
 }
 
+use crate::minecraft::packets::play::server::ChatPosition;
+
+impl Serialize for ChatPosition {
+    fn serialize<W: Write>(&self, buf: &mut W) -> Result<()> {
+        match self {
+            ChatPosition::Chat => serialize_varint(&1, buf),
+            ChatPosition::Hotbar => serialize_varint(&2, buf),
+            ChatPosition::System => serialize_varint(&4, buf),
+        }
+    }
+}
+
 pub fn serialize<S>(item: &S) -> Result<Vec<u8>>
 where
     S: Serialize,
