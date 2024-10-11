@@ -6,7 +6,7 @@ use crate::tcp::{Origin, State};
 use std::any::TypeId;
 use std::collections::HashMap;
 
-type CallbackFn = Box<dyn Fn(&dyn AnyPacket) -> Actions + Sync + Send>;
+type CallbackFn = Box<dyn Fn(&mut dyn AnyPacket) -> Actions + Sync + Send>;
 
 #[derive(Default)]
 pub struct CallbackManager {
@@ -17,10 +17,10 @@ pub struct CallbackManager {
 impl CallbackManager {
     pub fn register<T: AnyPacket + 'static>(
         &mut self,
-        callback: impl Fn(&T) -> Actions + 'static + Sync + Send,
+        callback: impl Fn(&mut T) -> Actions + 'static + Sync + Send,
     ) {
-        let boxed_callback = Box::new(move |packet: &dyn AnyPacket| -> Actions {
-            if let Some(concrete_packet) = packet.as_any().downcast_ref::<T>() {
+        let boxed_callback = Box::new(move |packet: &mut dyn AnyPacket| -> Actions {
+            if let Some(concrete_packet) = packet.as_any_mut().downcast_mut::<T>() {
                 callback(concrete_packet)
             } else {
                 Actions::Transfer
@@ -36,9 +36,9 @@ impl CallbackManager {
     pub fn handle_packet(&self, packet_id: i32, data: &[u8], origin: &Origin, state: &State) {
         if let Some(type_id) = self.type_map.get(packet_id, state, origin) {
             if let Some(callbacks) = self.callbacks.get(type_id) {
-                let packet = deserialize_any(origin, state, packet_id, data).unwrap();
+                let mut packet = deserialize_any(origin, state, packet_id, data).unwrap();
                 for callback in callbacks {
-                    callback(&*packet);
+                    callback(&mut *packet);
                 }
             }
         }

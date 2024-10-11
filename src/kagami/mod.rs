@@ -26,7 +26,7 @@ impl Kagami {
 
     pub fn register_callback<T: AnyPacket + 'static>(
         &mut self,
-        callback: impl Fn(&T) -> Actions + Send + Sync + 'static,
+        callback: impl Fn(&mut T) -> Actions + Send + Sync + 'static,
     ) {
         self.callbacks.register(callback);
     }
