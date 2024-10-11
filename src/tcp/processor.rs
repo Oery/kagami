@@ -57,7 +57,7 @@ pub async fn process_packets(
             }
         }
 
-        callbacks.handle_packet(packet_id, &mut packet_data, origin, &state);
+        callbacks.handle_packet(packet_id, &mut packet_data, raw_packet, origin, &state);
 
         // IF PACKET WAS MODIFIED, GENERATE NEW LENGTH
     }

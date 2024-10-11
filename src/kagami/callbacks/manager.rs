@@ -1,7 +1,7 @@
 use crate::kagami::callbacks::{Actions, TypeIdMap};
 use crate::minecraft::AnyPacket;
 use crate::serialization::deserialize_any;
-use crate::tcp::{Origin, State};
+use crate::tcp::{utils::RawPacket, Origin, State};
 
 use std::any::TypeId;
 use std::collections::HashMap;
@@ -33,12 +33,31 @@ impl CallbackManager {
             .push(boxed_callback);
     }
 
-    pub fn handle_packet(&self, packet_id: i32, data: &[u8], origin: &Origin, state: &State) {
+    pub fn handle_packet(
+        &self,
+        packet_id: i32,
+        data: &mut [u8],
+        raw_packet: &mut RawPacket,
+        origin: &Origin,
+        state: &State,
+    ) {
         if let Some(type_id) = self.type_map.get(packet_id, state, origin) {
             if let Some(callbacks) = self.callbacks.get(type_id) {
                 let mut packet = deserialize_any(origin, state, packet_id, data).unwrap();
+
                 for callback in callbacks {
-                    callback(&mut *packet);
+                    let action = callback(packet.as_mut());
+
+                    match action {
+                        Actions::Transfer => {}
+                        Actions::Filter => {
+                            raw_packet.0.clear();
+                            raw_packet.1.clear();
+                        }
+                        Actions::Modify => {
+                            // TODO: Serialize the packet, this requires turning the any packet into a concrete packet and recalculate its length. Also not sure if the ID is properly set. Also will need to implement compression.
+                        }
+                    }
                 }
             }
         }
