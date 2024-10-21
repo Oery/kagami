@@ -80,10 +80,10 @@ pub enum Packets {
     ClientCommand(packets::play::client::ClientCommand),
     CloseWindow(packets::play::client::CloseWindow),
     Flying(packets::play::client::Flying),
-    HeldItemSlot(packets::play::client::HeldItemSlot),
+    ClientHeldItemSlot(packets::play::client::HeldItemSlot),
     ClientKeepAlive(packets::play::client::KeepAlive),
     Look(packets::play::client::Look),
-    Position(packets::play::client::Position),
+    ClientPosition(packets::play::client::Position),
     PositionAndLook(packets::play::client::PositionAndLook),
     Transaction(packets::play::client::Transaction),
     UseEntity(packets::play::client::UseEntity),
@@ -99,6 +99,11 @@ pub enum Packets {
     ServerChat(packets::play::server::Chat),
     ServerKeepAlive(packets::play::server::KeepAlive),
     Login(packets::play::server::Login),
+    UpdateTime(packets::play::server::UpdateTime),
+    UpdateHealth(packets::play::server::UpdateHealth),
+    Respawn(packets::play::server::Respawn),
+    ServerPosition(packets::play::server::Position),
+    ServerHeldItemSlot(packets::play::server::HeldItemSlot),
 }
 
 impl Packets {

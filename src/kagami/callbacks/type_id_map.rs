@@ -83,13 +83,13 @@ impl TypeIdMap {
         self.gen::<play::server::KeepAlive>(0x00, Play, Server);
         self.gen::<play::server::Login>(0x01, Play, Server);
         self.gen::<play::server::Chat>(0x02, Play, Server);
-        // self.gen::<play::server::UpdateTime>(0x03, Play, Server);
+        self.gen::<play::server::UpdateTime>(0x03, Play, Server);
         // self.gen::<play::server::EntityEquipment>(0x04, Play, Server);
         // self.gen::<play::server::SpawnPosition>(0x05, Play, Server);
-        // self.gen::<play::server::UpdateHealth>(0x06, Play, Server);
-        // self.gen::<play::server::Respawn>(0x07, Play, Server);
-        // self.gen::<play::server::Position>(0x08, Play, Server);
-        // self.gen::<play::server::HeldItemSlot>(0x09, Play, Server);
+        self.gen::<play::server::UpdateHealth>(0x06, Play, Server);
+        self.gen::<play::server::Respawn>(0x07, Play, Server);
+        self.gen::<play::server::Position>(0x08, Play, Server);
+        self.gen::<play::server::HeldItemSlot>(0x09, Play, Server);
         // self.gen::<play::server::Bed>(0x0A, Play, Server);
         // self.gen::<play::server::Animation>(0x0B, Play, Server);
         // self.gen::<play::server::NamedEntitySpawn>(0x0C, Play, Server);

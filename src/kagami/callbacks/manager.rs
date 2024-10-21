@@ -79,10 +79,10 @@ impl CallbackManager {
             Packets::ClientChat(p) => p.handle_callbacks(&self.callbacks),
             Packets::UseEntity(p) => p.handle_callbacks(&self.callbacks),
             Packets::Flying(p) => p.handle_callbacks(&self.callbacks),
-            Packets::Position(p) => p.handle_callbacks(&self.callbacks),
+            Packets::ClientPosition(p) => p.handle_callbacks(&self.callbacks),
             Packets::Look(p) => p.handle_callbacks(&self.callbacks),
             Packets::PositionAndLook(p) => p.handle_callbacks(&self.callbacks),
-            Packets::HeldItemSlot(p) => p.handle_callbacks(&self.callbacks),
+            Packets::ClientHeldItemSlot(p) => p.handle_callbacks(&self.callbacks),
             Packets::ArmAnimation(p) => p.handle_callbacks(&self.callbacks),
             Packets::CloseWindow(p) => p.handle_callbacks(&self.callbacks),
             Packets::ClientCommand(p) => p.handle_callbacks(&self.callbacks),
@@ -96,7 +96,13 @@ impl CallbackManager {
             Packets::ServerInfo(p) => p.handle_callbacks(&self.callbacks),
             Packets::ServerKeepAlive(p) => p.handle_callbacks(&self.callbacks),
             Packets::ServerChat(p) => p.handle_callbacks(&self.callbacks),
+            Packets::UpdateTime(p) => p.handle_callbacks(&self.callbacks),
+            Packets::UpdateHealth(p) => p.handle_callbacks(&self.callbacks),
             Packets::Login(p) => p.handle_callbacks(&self.callbacks),
+            Packets::Respawn(p) => p.handle_callbacks(&self.callbacks),
+            Packets::ServerPosition(p) => p.handle_callbacks(&self.callbacks),
+            Packets::ServerHeldItemSlot(p) => p.handle_callbacks(&self.callbacks),
+        }
         }
     }
 }

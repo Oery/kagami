@@ -36,16 +36,18 @@ pub fn parse_packet(packet_id: i32, bytes: &[u8]) -> Result<Packets> {
         0x01 => Ok(Packets::ClientChat(Chat::deserialize_packet(bytes)?)),
         0x02 => Ok(Packets::UseEntity(UseEntity::deserialize_packet(bytes)?)),
         0x03 => Ok(Packets::Flying(Flying::deserialize_packet(bytes)?)),
-        0x04 => Ok(Packets::Position(Position::deserialize_packet(bytes)?)),
+        0x04 => Ok(Packets::ClientPosition(Position::deserialize_packet(
+            bytes,
+        )?)),
         0x05 => Ok(Packets::Look(Look::deserialize_packet(bytes)?)),
 
         0x06 => Ok(Packets::PositionAndLook(
             PositionAndLook::deserialize_packet(bytes)?,
         )),
 
-        0x09 => Ok(Packets::HeldItemSlot(HeldItemSlot::deserialize_packet(
-            bytes,
-        )?)),
+        0x09 => Ok(Packets::ClientHeldItemSlot(
+            HeldItemSlot::deserialize_packet(bytes)?,
+        )),
 
         0x0A => Ok(Packets::ArmAnimation(ArmAnimation::deserialize_packet(
             bytes,
@@ -76,10 +78,10 @@ pub fn serialize_packet(packet: &Packets) -> Result<Vec<u8>> {
         Packets::ClientChat(packet) => packet.serialize_packet(),
         Packets::UseEntity(packet) => packet.serialize_packet(),
         Packets::Flying(packet) => packet.serialize_packet(),
-        Packets::Position(packet) => packet.serialize_packet(),
+        Packets::ClientPosition(packet) => packet.serialize_packet(),
         Packets::Look(packet) => packet.serialize_packet(),
         Packets::PositionAndLook(packet) => packet.serialize_packet(),
-        Packets::HeldItemSlot(packet) => packet.serialize_packet(),
+        Packets::ClientHeldItemSlot(packet) => packet.serialize_packet(),
         Packets::ArmAnimation(packet) => packet.serialize_packet(),
         Packets::CloseWindow(packet) => packet.serialize_packet(),
         Packets::ClientCommand(packet) => packet.serialize_packet(),
