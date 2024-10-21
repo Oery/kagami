@@ -89,9 +89,13 @@ pub async fn process_packets(
                         let (ref mut length, ref mut data) = raw_packet;
                         let packet_data =
                             Packets::serialize_packet(packet, &state, origin).unwrap();
-                        println!("Serialized packet: {:?}", packet_data);
                         data.clear();
-                        data.push(0);
+                        match packet {
+                            Packets::ServerInfo(_) => {}
+                            _ => {
+                                data.push(0);
+                            }
+                        }
                         let varint = packet_id.to_varint().unwrap();
                         data.extend_from_slice(&varint);
                         data.extend_from_slice(&packet_data);
