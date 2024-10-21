@@ -3,7 +3,7 @@ pub mod callbacks;
 use std::sync::Arc;
 
 use crate::kagami::callbacks::manager::CallbackManager;
-use crate::minecraft::Packet;
+use crate::minecraft::{GlobalPacket, Packet};
 use crate::tcp::connection::handle_client_conn;
 
 use callbacks::Actions;
@@ -29,6 +29,13 @@ impl Kagami {
         callback: impl Fn(&mut T) -> Actions + Send + Sync + 'static,
     ) {
         self.callbacks.register(callback);
+    }
+
+    pub fn register_global_callback<F>(&mut self, callback: F)
+    where
+        F: Fn(&GlobalPacket) + Send + Sync + 'static,
+    {
+        self.callbacks.register_global_callback(callback);
     }
 
     pub async fn run(&mut self) -> Result<(), Box<dyn std::error::Error>> {

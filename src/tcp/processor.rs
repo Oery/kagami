@@ -1,7 +1,7 @@
 use crate::kagami::callbacks::manager::CallbackManager;
 use crate::kagami::callbacks::Actions;
 use crate::minecraft::packets::handshake::client::SetProtocol;
-use crate::minecraft::Packets;
+use crate::minecraft::{GlobalPacket, Packets};
 use crate::serialization::{deserialize, ToVarInt, VarIntReader};
 use crate::tcp::{utils::RawPacket, AtomicState, Origin, State};
 
@@ -60,10 +60,24 @@ pub async fn process_packets(
         }
 
         if let Some(type_id) = callbacks.type_map.get(packet_id, &state, origin) {
+            let mut packet_cache: Option<Packets> = None;
+
+            if !callbacks.global_callbacks.is_empty() {
+                let packet = packet_cache.get_or_insert_with(|| {
+                    Packets::deserialize_packet(packet_id, &packet_data, &state, origin).unwrap()
+                });
+
+                for callback in &callbacks.global_callbacks {
+                    callback(&GlobalPacket { packet });
+                }
+            }
+
             if callbacks.callbacks.contains_key(type_id) {
-                let mut packet =
-                    Packets::deserialize_packet(packet_id, &packet_data, &state, origin).unwrap();
-                let action = callbacks.handle_packet(&mut packet).unwrap();
+                let packet = packet_cache.get_or_insert_with(|| {
+                    Packets::deserialize_packet(packet_id, &packet_data, &state, origin).unwrap()
+                });
+
+                let action = callbacks.handle_packet(packet).unwrap();
                 match action {
                     Actions::Transfer => {}
                     Actions::Filter => {
@@ -74,7 +88,7 @@ pub async fn process_packets(
                         println!("Raw packet: {:?}", raw_packet);
                         let (ref mut length, ref mut data) = raw_packet;
                         let packet_data =
-                            Packets::serialize_packet(&packet, &state, origin).unwrap();
+                            Packets::serialize_packet(packet, &state, origin).unwrap();
                         println!("Serialized packet: {:?}", packet_data);
                         data.clear();
                         data.push(0);

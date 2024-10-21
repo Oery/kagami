@@ -1,5 +1,5 @@
 use crate::kagami::callbacks::{Actions, TypeIdMap};
-use crate::minecraft::{Packet, Packets};
+use crate::minecraft::{GlobalPacket, Packet, Packets};
 
 use std::any::{Any, TypeId};
 use std::collections::HashMap;
@@ -37,10 +37,13 @@ impl<T: Packet + 'static> PacketCallback for TypedCallback<T> {
     }
 }
 
+type GlobalCallback = Box<dyn Fn(&GlobalPacket) + Send + Sync>;
+
 #[derive(Default)]
 pub struct CallbackManager {
     pub type_map: TypeIdMap,
     pub callbacks: HashMap<TypeId, Vec<Box<dyn PacketCallback>>>,
+    pub global_callbacks: Vec<GlobalCallback>,
 }
 
 impl CallbackManager {
@@ -54,6 +57,13 @@ impl CallbackManager {
             .entry(TypeId::of::<T>())
             .or_default()
             .push(Box::new(typed_callback));
+    }
+
+    pub fn register_global_callback<F>(&mut self, callback: F)
+    where
+        F: Fn(&GlobalPacket) + 'static + Send + Sync,
+    {
+        self.global_callbacks.push(Box::new(callback));
     }
 
     // TODO: Create a macro to generate this

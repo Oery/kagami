@@ -151,3 +151,8 @@ impl Packets {
         }
     }
 }
+
+#[derive(Debug)]
+pub struct GlobalPacket<'a> {
+    pub packet: &'a Packets,
+}
