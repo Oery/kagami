@@ -38,7 +38,7 @@ impl TypeIdMap {
         self.gen::<status::client::Ping>(0x01, Status, Client);
 
         // Status Server
-        // self.gen::<status::server::ServerInfo>(0x00, Status, Server);
+        self.gen::<status::server::ServerInfo>(0x00, Status, Server);
         self.gen::<status::server::Ping>(0x01, Status, Server);
 
         // Login Client

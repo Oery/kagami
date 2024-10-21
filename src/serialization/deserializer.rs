@@ -127,9 +127,9 @@ impl Deserialize for ChatPosition {
     }
 }
 
-use crate::minecraft::packets::status::server::ServerInfo;
+use crate::minecraft::packets::status::server::ServerInfoPayload;
 
-impl Deserialize for ServerInfo {
+impl Deserialize for ServerInfoPayload {
     fn deserialize<R: Read>(reader: &mut R) -> io::Result<Self> {
         let json = String::deserialize(reader)?;
         let packet = serde_json::from_str::<Self>(&json)?;

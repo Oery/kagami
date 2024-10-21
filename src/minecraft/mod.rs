@@ -94,7 +94,7 @@ pub enum Packets {
     LoginSuccess(packets::login::server::LoginSuccess),
     // Status
     ServerPing(packets::status::server::Ping),
-    // ServerInfo(packets::status::server::ServerInfo),
+    ServerInfo(packets::status::server::ServerInfo),
     // Play
     ServerChat(packets::play::server::Chat),
     ServerKeepAlive(packets::play::server::KeepAlive),

@@ -119,9 +119,9 @@ impl Serialize for ChatPosition {
     }
 }
 
-use crate::minecraft::packets::status::server::ServerInfo;
+use crate::minecraft::packets::status::server::ServerInfoPayload;
 
-impl Serialize for ServerInfo {
+impl Serialize for ServerInfoPayload {
     fn serialize(&self, buf: &mut dyn Write) -> io::Result<()> {
         let json = serde_json::to_string(self)?;
         json.serialize(buf)?;

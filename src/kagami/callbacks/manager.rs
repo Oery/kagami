@@ -93,7 +93,7 @@ impl CallbackManager {
             Packets::LoginSuccess(p) => p.handle_callbacks(&self.callbacks),
 
             Packets::ServerPing(p) => p.handle_callbacks(&self.callbacks),
-            // Packets::ServerInfo(p) => p.handle_callbacks(&self.callbacks),
+            Packets::ServerInfo(p) => p.handle_callbacks(&self.callbacks),
             Packets::ServerKeepAlive(p) => p.handle_callbacks(&self.callbacks),
             Packets::ServerChat(p) => p.handle_callbacks(&self.callbacks),
             Packets::Login(p) => p.handle_callbacks(&self.callbacks),
