@@ -1,5 +1,5 @@
-mod deserializer;
-mod serializer;
+pub mod deserializer;
+pub mod serializer;
 mod varint;
 
 pub use deserializer::*;

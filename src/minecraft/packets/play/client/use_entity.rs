@@ -1,8 +1,8 @@
 use crate::minecraft::Packet;
-use crate::serialization::{deserialize_varint, serialize_varint, Deserialize, Serialize};
-use kagami_macro::{Deserialize, Packet, Serialize};
+use crate::serialization::{deserialize_varint, serialize_varint};
+use kagami_macro::{packet, Deserialize, Packet, Serialize};
 
-#[derive(Packet, Deserialize, Debug, Serialize)]
+#[packet]
 pub struct UseEntity {
     #[encoding("varint")]
     pub target: i32,

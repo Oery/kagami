@@ -1,9 +1,9 @@
 use crate::minecraft::Packet;
-use crate::serialization::{deserialize_varint, serialize_varint, Deserialize, Serialize};
+use crate::serialization::{deserialize_varint, serialize_varint};
 use crate::tcp::State;
-use kagami_macro::{Deserialize, Packet, Serialize};
+use kagami_macro::{packet, Deserialize, Packet, Serialize};
 
-#[derive(Packet, Deserialize, Serialize, Debug)]
+#[packet]
 pub struct SetProtocol {
     #[encoding("varint")]
     pub protocol_version: i32,

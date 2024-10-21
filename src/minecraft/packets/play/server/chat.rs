@@ -1,8 +1,7 @@
 use crate::minecraft::Packet;
-use crate::serialization::{Deserialize, Serialize};
-use kagami_macro::{Deserialize, Packet, Serialize};
+use kagami_macro::{packet, Deserialize, Packet, Serialize};
 
-#[derive(Packet, Deserialize, Debug, Serialize)]
+#[packet]
 pub struct Chat {
     pub message: String,
     pub position: ChatPosition,
