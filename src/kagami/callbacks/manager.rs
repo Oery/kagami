@@ -56,11 +56,37 @@ impl CallbackManager {
             .push(Box::new(typed_callback));
     }
 
+    // TODO: Create a macro to generate this
     pub fn handle_packet(&self, packet: &mut Packets) -> std::io::Result<Actions> {
         match packet {
-            Packets::ClientChat(chat) => chat.handle_callbacks(&self.callbacks),
-            Packets::Look(look) => look.handle_callbacks(&self.callbacks),
-            Packets::ServerChat(chat) => chat.handle_callbacks(&self.callbacks),
+            Packets::LegacyServerListPing(p) => p.handle_callbacks(&self.callbacks),
+            Packets::SetProtocol(p) => p.handle_callbacks(&self.callbacks),
+            Packets::LoginStart(p) => p.handle_callbacks(&self.callbacks),
+            Packets::PingStart(p) => p.handle_callbacks(&self.callbacks),
+            Packets::ClientPing(p) => p.handle_callbacks(&self.callbacks),
+
+            Packets::ClientKeepAlive(p) => p.handle_callbacks(&self.callbacks),
+            Packets::ClientChat(p) => p.handle_callbacks(&self.callbacks),
+            Packets::UseEntity(p) => p.handle_callbacks(&self.callbacks),
+            Packets::Flying(p) => p.handle_callbacks(&self.callbacks),
+            Packets::Position(p) => p.handle_callbacks(&self.callbacks),
+            Packets::Look(p) => p.handle_callbacks(&self.callbacks),
+            Packets::PositionAndLook(p) => p.handle_callbacks(&self.callbacks),
+            Packets::HeldItemSlot(p) => p.handle_callbacks(&self.callbacks),
+            Packets::ArmAnimation(p) => p.handle_callbacks(&self.callbacks),
+            Packets::CloseWindow(p) => p.handle_callbacks(&self.callbacks),
+            Packets::ClientCommand(p) => p.handle_callbacks(&self.callbacks),
+            Packets::Transaction(p) => p.handle_callbacks(&self.callbacks),
+
+            Packets::Compress(p) => p.handle_callbacks(&self.callbacks),
+            Packets::Disconnect(p) => p.handle_callbacks(&self.callbacks),
+            Packets::LoginSuccess(p) => p.handle_callbacks(&self.callbacks),
+
+            Packets::ServerPing(p) => p.handle_callbacks(&self.callbacks),
+            // Packets::ServerInfo(p) => p.handle_callbacks(&self.callbacks),
+            Packets::ServerKeepAlive(p) => p.handle_callbacks(&self.callbacks),
+            Packets::ServerChat(p) => p.handle_callbacks(&self.callbacks),
+            Packets::Login(p) => p.handle_callbacks(&self.callbacks),
         }
     }
 }
