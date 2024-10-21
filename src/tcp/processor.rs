@@ -102,7 +102,6 @@ pub async fn process_packets(
                         length.clear();
                         let varint = (data.len() as i32).to_varint().unwrap();
                         length.extend_from_slice(&varint);
-                        println!("Serialized packet: {:?}", raw_packet);
                     }
                 };
             }
