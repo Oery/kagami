@@ -62,7 +62,7 @@ pub trait Packet: Serialize + Deserialize + Debug + Any + Send + Sync {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub enum Packets {
     // ================ CLIENT ================
     // Handshake

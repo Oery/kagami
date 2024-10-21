@@ -8,7 +8,7 @@ pub struct Chat {
     pub position: ChatPosition,
 }
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub enum ChatPosition {
     Chat,   // 1
     Hotbar, // 2
