@@ -5,7 +5,7 @@ mod ping;
 mod server_info;
 
 pub use ping::Ping;
-pub use server_info::ServerInfo;
+pub use server_info::*;
 
 pub fn parse_packet(packet_id: i32, bytes: &[u8]) -> Result<Packets> {
     match packet_id {
