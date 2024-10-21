@@ -3,7 +3,7 @@ pub mod callbacks;
 use std::sync::Arc;
 
 use crate::kagami::callbacks::manager::CallbackManager;
-use crate::minecraft::AnyPacket;
+use crate::minecraft::Packet;
 use crate::tcp::connection::handle_client_conn;
 
 use callbacks::Actions;
@@ -24,7 +24,7 @@ impl Kagami {
         }
     }
 
-    pub fn register_callback<T: AnyPacket + 'static>(
+    pub fn register_callback<T: Packet + 'static>(
         &mut self,
         callback: impl Fn(&mut T) -> Actions + Send + Sync + 'static,
     ) {

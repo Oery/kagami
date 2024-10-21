@@ -1,4 +1,4 @@
-use crate::minecraft::{AnyPacket, Packet};
+use crate::minecraft::{Packet, Packets};
 use std::io::{Error, ErrorKind, Result};
 
 mod compress;
@@ -9,12 +9,27 @@ pub use compress::Compress;
 pub use disconnect::Disconnect;
 pub use login_success::LoginSuccess;
 
-pub fn parse_packet(packet_id: i32, data: &[u8]) -> Result<Box<dyn AnyPacket>> {
+pub fn parse_packet(packet_id: i32, bytes: &[u8]) -> Result<Packets> {
     match packet_id {
-        0 => Ok(Box::new(Disconnect::deserialize(data)?)),
+        0 => Ok(Packets::Disconnect(Disconnect::deserialize_packet(bytes)?)),
         // 1 => ???
-        2 => Ok(Box::new(LoginSuccess::deserialize(data)?)),
-        3 => Ok(Box::new(Compress::deserialize(data)?)),
+        2 => Ok(Packets::LoginSuccess(LoginSuccess::deserialize_packet(
+            bytes,
+        )?)),
+
+        3 => Ok(Packets::Compress(Compress::deserialize_packet(bytes)?)),
+
         _ => Err(Error::new(ErrorKind::InvalidData, "Unknown packet id")),
+    }
+}
+
+pub fn serialize_packet(packet: &Packets) -> Result<Vec<u8>> {
+    match packet {
+        Packets::Disconnect(packet) => packet.serialize_packet(),
+        //
+        Packets::LoginSuccess(packet) => packet.serialize_packet(),
+        Packets::Compress(packet) => packet.serialize_packet(),
+
+        _ => panic!("Invalid packet: not a server login: {:#?}", packet),
     }
 }

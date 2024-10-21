@@ -1,6 +1,8 @@
 use crate::kagami::callbacks::manager::CallbackManager;
+use crate::kagami::callbacks::Actions;
 use crate::minecraft::packets::handshake::client::SetProtocol;
-use crate::serialization::{deserialize, VarIntReader};
+use crate::minecraft::Packets;
+use crate::serialization::{deserialize, ToVarInt, VarIntReader};
 use crate::tcp::{utils::RawPacket, AtomicState, Origin, State};
 
 use std::sync::{
@@ -57,8 +59,35 @@ pub async fn process_packets(
             }
         }
 
-        callbacks.handle_packet(packet_id, &mut packet_data, raw_packet, origin, &state);
-
-        // IF PACKET WAS MODIFIED, GENERATE NEW LENGTH
+        if let Some(type_id) = callbacks.type_map.get(packet_id, &state, origin) {
+            if callbacks.callbacks.contains_key(type_id) {
+                let mut packet =
+                    Packets::deserialize_packet(packet_id, &packet_data, &state, origin).unwrap();
+                let action = callbacks.handle_packet(&mut packet).unwrap();
+                match action {
+                    Actions::Transfer => {}
+                    Actions::Filter => {
+                        raw_packet.0.clear();
+                        raw_packet.1.clear();
+                    }
+                    Actions::Modify => {
+                        println!("Raw packet: {:?}", raw_packet);
+                        let (ref mut length, ref mut data) = raw_packet;
+                        let packet_data =
+                            Packets::serialize_packet(&packet, &state, origin).unwrap();
+                        println!("Serialized packet: {:?}", packet_data);
+                        data.clear();
+                        data.push(0);
+                        let varint = packet_id.to_varint().unwrap();
+                        data.extend_from_slice(&varint);
+                        data.extend_from_slice(&packet_data);
+                        length.clear();
+                        let varint = (data.len() as i32).to_varint().unwrap();
+                        length.extend_from_slice(&varint);
+                        println!("Serialized packet: {:?}", raw_packet);
+                    }
+                };
+            }
+        }
     }
 }

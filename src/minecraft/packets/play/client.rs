@@ -1,4 +1,4 @@
-use crate::minecraft::{AnyPacket, Packet};
+use crate::minecraft::{Packet, Packets};
 use std::io::{Error, ErrorKind, Result};
 
 mod arm_animation;
@@ -27,28 +27,64 @@ pub use position_and_look::PositionAndLook;
 pub use transaction::Transaction;
 pub use use_entity::UseEntity;
 
-pub fn parse_packet(packet_id: i32, data: &[u8]) -> Result<Box<dyn AnyPacket>> {
+pub fn parse_packet(packet_id: i32, bytes: &[u8]) -> Result<Packets> {
     match packet_id {
-        0x00 => Ok(Box::new(KeepAlive::deserialize(data)?)),
-        0x01 => Ok(Box::new(Chat::deserialize(data)?)),
-        0x02 => Ok(Box::new(UseEntity::deserialize(data)?)),
-        0x03 => Ok(Box::new(Flying::deserialize(data)?)),
-        0x04 => Ok(Box::new(Position::deserialize(data)?)),
-        0x05 => Ok(Box::new(Look::deserialize(data)?)),
-        0x06 => Ok(Box::new(PositionAndLook::deserialize(data)?)),
+        0x00 => Ok(Packets::ClientKeepAlive(KeepAlive::deserialize_packet(
+            bytes,
+        )?)),
 
-        0x09 => Ok(Box::new(HeldItemSlot::deserialize(data)?)),
+        0x01 => Ok(Packets::ClientChat(Chat::deserialize_packet(bytes)?)),
+        0x02 => Ok(Packets::UseEntity(UseEntity::deserialize_packet(bytes)?)),
+        0x03 => Ok(Packets::Flying(Flying::deserialize_packet(bytes)?)),
+        0x04 => Ok(Packets::Position(Position::deserialize_packet(bytes)?)),
+        0x05 => Ok(Packets::Look(Look::deserialize_packet(bytes)?)),
 
-        0x0A => Ok(Box::new(ArmAnimation::deserialize(data)?)),
+        0x06 => Ok(Packets::PositionAndLook(
+            PositionAndLook::deserialize_packet(bytes)?,
+        )),
 
-        0x0D => Ok(Box::new(CloseWindow::deserialize(data)?)),
+        0x09 => Ok(Packets::HeldItemSlot(HeldItemSlot::deserialize_packet(
+            bytes,
+        )?)),
 
-        0x16 => Ok(Box::new(ClientCommand::deserialize(data)?)),
-        0x0F => Ok(Box::new(Transaction::deserialize(data)?)),
+        0x0A => Ok(Packets::ArmAnimation(ArmAnimation::deserialize_packet(
+            bytes,
+        )?)),
+
+        0x0D => Ok(Packets::CloseWindow(CloseWindow::deserialize_packet(
+            bytes,
+        )?)),
+
+        0x16 => Ok(Packets::ClientCommand(ClientCommand::deserialize_packet(
+            bytes,
+        )?)),
+
+        0x0F => Ok(Packets::Transaction(Transaction::deserialize_packet(
+            bytes,
+        )?)),
 
         _ => Err(Error::new(
             ErrorKind::InvalidData,
             format!("Unknown packet id : {}", packet_id),
         )),
+    }
+}
+
+pub fn serialize_packet(packet: &Packets) -> Result<Vec<u8>> {
+    match packet {
+        Packets::ClientKeepAlive(packet) => packet.serialize_packet(),
+        Packets::ClientChat(packet) => packet.serialize_packet(),
+        Packets::UseEntity(packet) => packet.serialize_packet(),
+        Packets::Flying(packet) => packet.serialize_packet(),
+        Packets::Position(packet) => packet.serialize_packet(),
+        Packets::Look(packet) => packet.serialize_packet(),
+        Packets::PositionAndLook(packet) => packet.serialize_packet(),
+        Packets::HeldItemSlot(packet) => packet.serialize_packet(),
+        Packets::ArmAnimation(packet) => packet.serialize_packet(),
+        Packets::CloseWindow(packet) => packet.serialize_packet(),
+        Packets::ClientCommand(packet) => packet.serialize_packet(),
+        Packets::Transaction(packet) => packet.serialize_packet(),
+
+        _ => panic!("Invalid packet: not a client play: {:#?}", packet),
     }
 }

@@ -1,7 +1,8 @@
 use byteorder::{ReadBytesExt, WriteBytesExt};
-use std::io;
+use std::io::{self, Write};
 
-pub fn serialize_varint<W: io::Write>(value: &i32, writer: &mut W) -> io::Result<()> {
+// TODO: Check why we use this instead of cursor.write_varint() which is implemented in this file
+pub fn serialize_varint(value: &i32, writer: &mut dyn Write) -> io::Result<()> {
     let mut value = *value as u32;
     loop {
         let mut byte = (value & 0x7F) as u8;
@@ -111,5 +112,17 @@ impl<W: std::io::Write> VarIntWriter for W {
         }
 
         Ok(())
+    }
+}
+
+pub trait ToVarInt {
+    fn to_varint(&self) -> io::Result<Vec<u8>>;
+}
+
+impl ToVarInt for i32 {
+    fn to_varint(&self) -> io::Result<Vec<u8>> {
+        let mut writer = std::io::Cursor::new(Vec::new());
+        serialize_varint(self, &mut writer)?;
+        Ok(writer.into_inner())
     }
 }

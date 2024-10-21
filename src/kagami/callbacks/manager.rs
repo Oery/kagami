@@ -1,64 +1,66 @@
 use crate::kagami::callbacks::{Actions, TypeIdMap};
-use crate::minecraft::AnyPacket;
-use crate::serialization::deserialize_any;
-use crate::tcp::{utils::RawPacket, Origin, State};
+use crate::minecraft::{Packet, Packets};
 
-use std::any::TypeId;
+use std::any::{Any, TypeId};
 use std::collections::HashMap;
 
-type CallbackFn = Box<dyn Fn(&mut dyn AnyPacket) -> Actions + Sync + Send>;
+pub trait PacketCallback: Send + Sync {
+    fn call(&self, packet: &mut dyn Any) -> std::io::Result<Actions>;
+}
+
+struct TypedCallback<T: Packet> {
+    callback: Box<dyn Fn(&mut T) -> Actions + Send + Sync>,
+    _phantom: std::marker::PhantomData<T>,
+}
+
+impl<T: Packet> TypedCallback<T> {
+    fn new<F>(callback: F) -> Self
+    where
+        F: Fn(&mut T) -> Actions + 'static + Send + Sync,
+    {
+        Self {
+            callback: Box::new(callback),
+            _phantom: std::marker::PhantomData,
+        }
+    }
+}
+
+impl<T: Packet + 'static> PacketCallback for TypedCallback<T> {
+    fn call(&self, packet: &mut dyn Any) -> std::io::Result<Actions> {
+        match packet
+            .downcast_mut::<T>()
+            .map(|packet| (self.callback)(packet))
+        {
+            Some(action) => Ok(action),
+            None => panic!("Failed to downcast packet"),
+        }
+    }
+}
 
 #[derive(Default)]
 pub struct CallbackManager {
     pub type_map: TypeIdMap,
-    pub callbacks: HashMap<TypeId, Vec<CallbackFn>>,
+    pub callbacks: HashMap<TypeId, Vec<Box<dyn PacketCallback>>>,
 }
 
 impl CallbackManager {
-    pub fn register<T: AnyPacket + 'static>(
-        &mut self,
-        callback: impl Fn(&mut T) -> Actions + 'static + Sync + Send,
-    ) {
-        let boxed_callback = Box::new(move |packet: &mut dyn AnyPacket| -> Actions {
-            match packet.as_any_mut().downcast_mut::<T>() {
-                Some(concrete_packet) => callback(concrete_packet),
-                None => Actions::Transfer,
-            }
-        });
-
+    pub fn register<T, F>(&mut self, callback: F)
+    where
+        T: Packet + 'static,
+        F: Fn(&mut T) -> Actions + 'static + Send + Sync,
+    {
+        let typed_callback = TypedCallback::new(callback);
         self.callbacks
             .entry(TypeId::of::<T>())
             .or_default()
-            .push(boxed_callback);
+            .push(Box::new(typed_callback));
     }
 
-    pub fn handle_packet(
-        &self,
-        packet_id: i32,
-        data: &mut [u8],
-        raw_packet: &mut RawPacket,
-        origin: &Origin,
-        state: &State,
-    ) {
-        if let Some(type_id) = self.type_map.get(packet_id, state, origin) {
-            if let Some(callbacks) = self.callbacks.get(type_id) {
-                let mut packet = deserialize_any(origin, state, packet_id, data).unwrap();
-
-                for callback in callbacks {
-                    let action = callback(packet.as_mut());
-
-                    match action {
-                        Actions::Transfer => {}
-                        Actions::Filter => {
-                            raw_packet.0.clear();
-                            raw_packet.1.clear();
-                        }
-                        Actions::Modify => {
-                            // TODO: Serialize the packet, this requires turning the any packet into a concrete packet and recalculate its length. Also not sure if the ID is properly set. Also will need to implement compression.
-                        }
-                    }
-                }
-            }
+    pub fn handle_packet(&self, packet: &mut Packets) -> std::io::Result<Actions> {
+        match packet {
+            Packets::ClientChat(chat) => chat.handle_callbacks(&self.callbacks),
+            Packets::Look(look) => look.handle_callbacks(&self.callbacks),
+            Packets::ServerChat(chat) => chat.handle_callbacks(&self.callbacks),
         }
     }
 }

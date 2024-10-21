@@ -4,7 +4,7 @@ use std::io::{self, Read};
 use crate::{
     minecraft::{
         packets::{handshake, login, play, status},
-        AnyPacket,
+        Packets,
     },
     tcp::{Origin, State},
 };
@@ -140,7 +140,7 @@ pub fn deserialize_any(
     state: &State,
     packet_id: i32,
     data: &[u8],
-) -> io::Result<Box<dyn AnyPacket>> {
+) -> io::Result<Packets> {
     match origin {
         Origin::Client => match state {
             State::HandShaking => handshake::client::parse_packet(packet_id, data),
@@ -148,14 +148,16 @@ pub fn deserialize_any(
             State::Login => login::client::parse_packet(packet_id, data),
             State::Play => play::client::parse_packet(packet_id, data),
         },
+
         Origin::Server => match state {
+            State::Status => status::server::parse_packet(packet_id, data),
+            State::Login => login::server::parse_packet(packet_id, data),
+            State::Play => play::server::parse_packet(packet_id, data),
+
             State::HandShaking => Err(io::Error::new(
                 io::ErrorKind::InvalidData,
                 "Invalid packet id",
             )),
-            State::Status => status::server::parse_packet(packet_id, data),
-            State::Login => login::server::parse_packet(packet_id, data),
-            State::Play => play::server::parse_packet(packet_id, data),
         },
     }
 }
