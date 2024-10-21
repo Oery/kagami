@@ -119,6 +119,16 @@ impl Serialize for ChatPosition {
     }
 }
 
+use crate::minecraft::packets::status::server::ServerInfo;
+
+impl Serialize for ServerInfo {
+    fn serialize(&self, buf: &mut dyn Write) -> io::Result<()> {
+        let json = serde_json::to_string(self)?;
+        json.serialize(buf)?;
+        Ok(())
+    }
+}
+
 pub fn serialize<S>(item: &S) -> io::Result<Vec<u8>>
 where
     S: Serialize,

@@ -127,6 +127,16 @@ impl Deserialize for ChatPosition {
     }
 }
 
+use crate::minecraft::packets::status::server::ServerInfo;
+
+impl Deserialize for ServerInfo {
+    fn deserialize<R: Read>(reader: &mut R) -> io::Result<Self> {
+        let json = String::deserialize(reader)?;
+        let packet = serde_json::from_str::<Self>(&json)?;
+        Ok(packet)
+    }
+}
+
 pub fn deserialize<D>(bytes: &[u8]) -> io::Result<D>
 where
     D: Deserialize,
