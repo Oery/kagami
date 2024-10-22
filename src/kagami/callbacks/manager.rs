@@ -112,6 +112,13 @@ impl CallbackManager {
             Packets::EntityVelocity(p) => p.handle_callbacks(&self.callbacks),
             Packets::EntityDestroy(p) => p.handle_callbacks(&self.callbacks),
             Packets::Entity(p) => p.handle_callbacks(&self.callbacks),
+            Packets::EntityRelativeMove(p) => p.handle_callbacks(&self.callbacks),
+            Packets::EntityLook(p) => p.handle_callbacks(&self.callbacks),
+            Packets::EntityMoveLook(p) => p.handle_callbacks(&self.callbacks),
+            Packets::EntityTeleport(p) => p.handle_callbacks(&self.callbacks),
+            Packets::EntityHeadRotation(p) => p.handle_callbacks(&self.callbacks),
+            Packets::EntityStatus(p) => p.handle_callbacks(&self.callbacks),
+            Packets::AttachEntity(p) => p.handle_callbacks(&self.callbacks),
 
             Packets::PlayerInfo(p) => p.handle_callbacks(&self.callbacks),
     }

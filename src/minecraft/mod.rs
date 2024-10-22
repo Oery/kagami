@@ -114,6 +114,13 @@ pub enum Packets {
     EntityVelocity(packets::play::server::EntityVelocity),
     EntityDestroy(packets::play::server::EntityDestroy),
     Entity(packets::play::server::Entity),
+    EntityRelativeMove(packets::play::server::EntityRelativeMove),
+    EntityLook(packets::play::server::EntityLook),
+    EntityMoveLook(packets::play::server::EntityMoveLook),
+    EntityTeleport(packets::play::server::EntityTeleport),
+    EntityHeadRotation(packets::play::server::EntityHeadRotation),
+    EntityStatus(packets::play::server::EntityStatus),
+    AttachEntity(packets::play::server::AttachEntity),
 
     PlayerInfo(packets::play::server::PlayerInfo),
 }
