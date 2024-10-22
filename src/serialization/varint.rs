@@ -143,3 +143,10 @@ pub fn serialize_varint_vec(vec: &Vec<i32>, writer: &mut dyn io::Write) -> io::R
     }
     Ok(())
 }
+
+pub fn serialize_varint_option(option: &Option<i32>, writer: &mut dyn io::Write) -> io::Result<()> {
+    if let Some(value) = option {
+        serialize_varint(value, writer)?;
+    }
+    Ok(())
+}
