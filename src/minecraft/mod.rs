@@ -104,6 +104,16 @@ pub enum Packets {
     Respawn(packets::play::server::Respawn),
     ServerPosition(packets::play::server::Position),
     ServerHeldItemSlot(packets::play::server::HeldItemSlot),
+    Bed(packets::play::server::Bed),
+    Animation(packets::play::server::Animation),
+    // NamedEntitySpawn(packets::play::server::NamedEntitySpawn),
+    Collect(packets::play::server::Collect),
+
+    SpawnEntityPainting(packets::play::server::SpawnEntityPainting),
+    SpawnEntityExperienceOrb(packets::play::server::SpawnEntityExperienceOrb),
+    EntityVelocity(packets::play::server::EntityVelocity),
+    EntityDestroy(packets::play::server::EntityDestroy),
+    Entity(packets::play::server::Entity),
 }
 
 impl Packets {

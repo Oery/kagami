@@ -102,6 +102,16 @@ impl CallbackManager {
             Packets::Respawn(p) => p.handle_callbacks(&self.callbacks),
             Packets::ServerPosition(p) => p.handle_callbacks(&self.callbacks),
             Packets::ServerHeldItemSlot(p) => p.handle_callbacks(&self.callbacks),
+            Packets::Bed(p) => p.handle_callbacks(&self.callbacks),
+            Packets::Animation(p) => p.handle_callbacks(&self.callbacks),
+            // Packets::NamedEntitySpawn(p) => p.handle_callbacks(&self.callbacks),
+            Packets::Collect(p) => p.handle_callbacks(&self.callbacks),
+
+            Packets::SpawnEntityPainting(p) => p.handle_callbacks(&self.callbacks),
+            Packets::SpawnEntityExperienceOrb(p) => p.handle_callbacks(&self.callbacks),
+            Packets::EntityVelocity(p) => p.handle_callbacks(&self.callbacks),
+            Packets::EntityDestroy(p) => p.handle_callbacks(&self.callbacks),
+            Packets::Entity(p) => p.handle_callbacks(&self.callbacks),
         }
         }
     }
