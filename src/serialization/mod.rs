@@ -1,4 +1,5 @@
 pub mod deserializer;
+pub mod position;
 pub mod serializer;
 mod varint;
 
