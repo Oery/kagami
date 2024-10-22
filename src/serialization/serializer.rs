@@ -38,6 +38,13 @@ impl Serialize for u32 {
     }
 }
 
+impl Serialize for u64 {
+    fn serialize(&self, buf: &mut dyn Write) -> io::Result<()> {
+        buf.write_all(&self.to_be_bytes())?;
+        Ok(())
+    }
+}
+
 impl Serialize for i8 {
     fn serialize(&self, buf: &mut dyn Write) -> io::Result<()> {
         buf.write_all(&self.to_be_bytes())?;

@@ -45,6 +45,12 @@ impl Deserialize for u32 {
     }
 }
 
+impl Deserialize for u64 {
+    fn deserialize<R: Read>(reader: &mut R) -> io::Result<Self> {
+        reader.read_u64::<BigEndian>()
+    }
+}
+
 impl Deserialize for i8 {
     fn deserialize<R: Read>(reader: &mut R) -> io::Result<Self> {
         reader.read_i8()
