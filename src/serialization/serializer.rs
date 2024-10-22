@@ -1,3 +1,6 @@
+use byteorder::{BigEndian, WriteBytesExt};
+use uuid::Uuid;
+
 use super::serialize_varint;
 use std::io::{self, Write};
 
@@ -102,6 +105,19 @@ impl<T: Serialize> Serialize for Vec<T> {
         for item in self {
             item.serialize(buf)?;
         }
+        Ok(())
+    }
+}
+
+impl Serialize for Uuid {
+    fn serialize(&self, buf: &mut dyn Write) -> io::Result<()> {
+        let uuid_bytes = &self.as_bytes();
+        let most_significant = u64::from_be_bytes(uuid_bytes[..8].try_into().unwrap());
+        let least_significant = u64::from_be_bytes(uuid_bytes[8..].try_into().unwrap());
+
+        buf.write_u64::<BigEndian>(most_significant)?;
+        buf.write_u64::<BigEndian>(least_significant)?;
+
         Ok(())
     }
 }

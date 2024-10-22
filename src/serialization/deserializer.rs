@@ -1,5 +1,6 @@
 use byteorder::{BigEndian, ReadBytesExt};
 use std::io::{self, Read};
+use uuid::Uuid;
 
 use crate::{
     minecraft::{
@@ -107,6 +108,19 @@ impl<T: Deserialize> Deserialize for Vec<T> {
             vec.push(T::deserialize(reader)?);
         }
         Ok(vec)
+    }
+}
+
+impl Deserialize for Uuid {
+    fn deserialize<R: Read>(reader: &mut R) -> io::Result<Self> {
+        let most_significant = reader.read_u64::<BigEndian>()?;
+        let least_significant = reader.read_u64::<BigEndian>()?;
+        let mut uuid_bytes = [0u8; 16];
+        uuid_bytes[..8].copy_from_slice(&most_significant.to_be_bytes());
+        uuid_bytes[8..].copy_from_slice(&least_significant.to_be_bytes());
+        let uuid = Uuid::from_bytes(uuid_bytes);
+        dbg!(&uuid);
+        Ok(uuid)
     }
 }
 
