@@ -99,6 +99,17 @@ impl<T: Deserialize> Deserialize for Option<T> {
     }
 }
 
+impl<T: Deserialize> Deserialize for Vec<T> {
+    fn deserialize<R: Read>(reader: &mut R) -> io::Result<Self> {
+        let length = deserialize_varint(reader)?;
+        let mut vec = Vec::with_capacity(length as usize);
+        for _ in 0..length {
+            vec.push(T::deserialize(reader)?);
+        }
+        Ok(vec)
+    }
+}
+
 impl Deserialize for crate::tcp::State {
     fn deserialize<R: Read>(reader: &mut R) -> io::Result<Self> {
         match deserialize_varint(reader)? {
