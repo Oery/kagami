@@ -112,7 +112,7 @@ impl CallbackManager {
             Packets::EntityVelocity(p) => p.handle_callbacks(&self.callbacks),
             Packets::EntityDestroy(p) => p.handle_callbacks(&self.callbacks),
             Packets::Entity(p) => p.handle_callbacks(&self.callbacks),
-        }
-        }
+
+            Packets::PlayerInfo(p) => p.handle_callbacks(&self.callbacks),
     }
 }

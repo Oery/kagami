@@ -144,6 +144,7 @@ impl TypeIdMap {
         // self.gen::<play::server::ScoreboardDisplay>(0x3D, Play, Server);
         // self.gen::<play::server::ScoreboardTeam>(0x3E, Play, Server);
         // self.gen::<play::server::CustomPayload>(0x3F, Play, Server);
+        self.gen::<play::server::PlayerInfo>(0x38, Play, Server);
         // self.gen::<play::server::KickDisconnect>(0x40, Play, Server);
         // self.gen::<play::server::Difficulty>(0x41, Play, Server);
         // self.gen::<play::server::CombatEvent>(0x42, Play, Server);

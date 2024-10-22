@@ -114,6 +114,8 @@ pub enum Packets {
     EntityVelocity(packets::play::server::EntityVelocity),
     EntityDestroy(packets::play::server::EntityDestroy),
     Entity(packets::play::server::Entity),
+
+    PlayerInfo(packets::play::server::PlayerInfo),
 }
 
 impl Packets {

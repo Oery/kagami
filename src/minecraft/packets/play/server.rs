@@ -11,6 +11,7 @@ mod entity_velocity;
 mod held_item_slot;
 mod keep_alive;
 mod login;
+mod player_info;
 mod position;
 mod respawn;
 mod spawn_entity_experience_orb;
@@ -28,6 +29,7 @@ pub use entity_velocity::EntityVelocity;
 pub use held_item_slot::HeldItemSlot;
 pub use keep_alive::KeepAlive;
 pub use login::Login;
+pub use player_info::*;
 pub use position::Position;
 pub use respawn::Respawn;
 pub use spawn_entity_experience_orb::SpawnEntityExperienceOrb;
@@ -79,6 +81,8 @@ pub fn parse_packet(packet_id: i32, bytes: &[u8]) -> Result<Packets> {
 
         0x14 => Ok(Packets::Entity(Entity::deserialize_packet(bytes)?)),
 
+        0x38 => Ok(Packets::PlayerInfo(PlayerInfo::deserialize_packet(bytes)?)),
+
         _ => Err(Error::new(
             ErrorKind::InvalidData,
             format!("Unknown packet id : {}", packet_id),
@@ -106,6 +110,8 @@ pub fn serialize_packet(packet: &Packets) -> Result<Vec<u8>> {
         Packets::EntityVelocity(packet) => packet.serialize_packet(),
         Packets::EntityDestroy(packet) => packet.serialize_packet(),
         Packets::Entity(packet) => packet.serialize_packet(),
+
+        Packets::PlayerInfo(packet) => packet.serialize_packet(),
 
         _ => panic!("Invalid packet: not a server play: {:#?}", packet),
     }

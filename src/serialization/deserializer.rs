@@ -130,6 +130,57 @@ impl Deserialize for Uuid {
     }
 }
 
+impl Deserialize for crate::minecraft::packets::play::server::PlayerInfo {
+    fn deserialize<R: std::io::Read>(reader: &mut R) -> std::io::Result<Self>
+    where
+        Self: std::marker::Sized,
+    {
+        let mut player_info = crate::minecraft::packets::play::server::PlayerInfo {
+            action: deserialize_varint(reader)?,
+            ..Default::default()
+        };
+
+        for _ in 0..deserialize_varint(reader)? {
+            let player = deserialize_player(reader, &player_info.action)?;
+            player_info.data.push(player);
+        }
+        Ok(player_info)
+    }
+}
+
+pub fn deserialize_player<R: std::io::Read>(
+    reader: &mut R,
+    action: &i32,
+) -> std::io::Result<crate::minecraft::packets::play::server::Player> {
+    let mut player = crate::minecraft::packets::play::server::Player {
+        uuid: Uuid::deserialize(reader)?,
+        ..Default::default()
+    };
+
+    if action == &0 {
+        player.name = Some(String::deserialize(reader)?);
+        player.properties = Some(Vec::deserialize(reader)?);
+    }
+
+    if action == &0 || action == &1 {
+        player.game_mode = Some(deserialize_varint(reader)?);
+    }
+
+    if action == &0 || action == &2 {
+        player.ping = Some(deserialize_varint(reader)?);
+    }
+
+    if action == &0 || action == &3 {
+        player.has_display_name = Some(bool::deserialize(reader)?);
+
+        if player.has_display_name.unwrap() {
+            player.display_name = Some(String::deserialize(reader)?);
+        }
+    }
+
+    Ok(player)
+}
+
 impl Deserialize for crate::tcp::State {
     fn deserialize<R: Read>(reader: &mut R) -> io::Result<Self> {
         match deserialize_varint(reader)? {
