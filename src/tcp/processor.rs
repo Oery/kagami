@@ -85,7 +85,6 @@ pub async fn process_packets(
                         raw_packet.1.clear();
                     }
                     Actions::Modify => {
-                        println!("Raw packet: {:?}", raw_packet);
                         let (ref mut length, ref mut data) = raw_packet;
                         let packet_data =
                             Packets::serialize_packet(packet, &state, origin).unwrap();
