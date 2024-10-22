@@ -126,3 +126,20 @@ impl ToVarInt for i32 {
         Ok(writer.into_inner())
     }
 }
+
+pub fn deserialize_varint_vec<R: io::Read>(reader: &mut R) -> io::Result<Vec<i32>> {
+    let length = deserialize_varint(reader)?;
+    let mut vec = Vec::with_capacity(length as usize);
+    for _ in 0..length {
+        vec.push(deserialize_varint(reader)?);
+    }
+    Ok(vec)
+}
+
+pub fn serialize_varint_vec(vec: &Vec<i32>, writer: &mut dyn io::Write) -> io::Result<()> {
+    serialize_varint(&(vec.len() as i32), writer)?;
+    for item in vec {
+        serialize_varint(item, writer)?;
+    }
+    Ok(())
+}

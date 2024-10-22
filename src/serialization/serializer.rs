@@ -96,6 +96,16 @@ impl<T: Serialize> Serialize for Option<T> {
     }
 }
 
+impl<T: Serialize> Serialize for Vec<T> {
+    fn serialize(&self, buf: &mut dyn Write) -> io::Result<()> {
+        serialize_varint(&(self.len() as i32), buf)?;
+        for item in self {
+            item.serialize(buf)?;
+        }
+        Ok(())
+    }
+}
+
 impl Serialize for crate::tcp::State {
     fn serialize(&self, buf: &mut dyn Write) -> io::Result<()> {
         match self {
