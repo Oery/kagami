@@ -11,5 +11,5 @@ pub struct EntityEffect {
     amplifier: i8,
     #[encoding("varint")]
     duration: i32,
-    hide_particels: bool,
+    hide_particles: bool,
 }
