@@ -129,55 +129,25 @@ impl Deserialize for Uuid {
     }
 }
 
-impl Deserialize for crate::minecraft::packets::play::server::PlayerInfo {
-    fn deserialize<R: std::io::Read>(reader: &mut R) -> std::io::Result<Self>
-    where
-        Self: std::marker::Sized,
-    {
-        let mut player_info = crate::minecraft::packets::play::server::PlayerInfo {
-            action: deserialize_varint(reader)?,
-            ..Default::default()
-        };
+use crate::minecraft::packets::play::server::PlayerInfoAction;
 
-        for _ in 0..deserialize_varint(reader)? {
-            let player = deserialize_player(reader, &player_info.action)?;
-            player_info.data.push(player);
-        }
-        Ok(player_info)
-    }
-}
+impl Deserialize for PlayerInfoAction {
+    fn deserialize<R: std::io::Read>(reader: &mut R) -> std::io::Result<Self> {
+        use PlayerInfoAction::*;
 
-pub fn deserialize_player<R: std::io::Read>(
-    reader: &mut R,
-    action: &i32,
-) -> std::io::Result<crate::minecraft::packets::play::server::Player> {
-    let mut player = crate::minecraft::packets::play::server::Player {
-        uuid: Uuid::deserialize(reader)?,
-        ..Default::default()
-    };
+        match deserialize_varint(reader)? {
+            0 => Ok(AddPlayer(Vec::deserialize(reader)?)),
+            1 => Ok(UpdateGameMode(Vec::deserialize(reader)?)),
+            2 => Ok(UpdatePing(Vec::deserialize(reader)?)),
+            3 => Ok(UpdateDisplayName(Vec::deserialize(reader)?)),
+            4 => Ok(RemovePlayer(Vec::deserialize(reader)?)),
 
-    if action == &0 {
-        player.name = Some(String::deserialize(reader)?);
-        player.properties = Some(Vec::deserialize(reader)?);
-    }
-
-    if action == &0 || action == &1 {
-        player.game_mode = Some(deserialize_varint(reader)?);
-    }
-
-    if action == &0 || action == &2 {
-        player.ping = Some(deserialize_varint(reader)?);
-    }
-
-    if action == &0 || action == &3 {
-        player.has_display_name = Some(bool::deserialize(reader)?);
-
-        if player.has_display_name.unwrap() {
-            player.display_name = Some(String::deserialize(reader)?);
+            action => Err(std::io::Error::new(
+                std::io::ErrorKind::InvalidData,
+                format!("Invalid player info action : {action}"),
+            )),
         }
     }
-
-    Ok(player)
 }
 
 impl Deserialize for crate::tcp::State {

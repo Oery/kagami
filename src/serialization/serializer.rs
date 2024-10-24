@@ -129,6 +129,30 @@ impl Serialize for Uuid {
     }
 }
 
+use crate::minecraft::packets::play::server::PlayerInfoAction;
+
+impl Serialize for PlayerInfoAction {
+    fn serialize(&self, buf: &mut dyn std::io::Write) -> std::io::Result<()> {
+        use PlayerInfoAction::*;
+
+        match self {
+            AddPlayer(_) => serialize_varint(&0, buf)?,
+            UpdateGameMode(_) => serialize_varint(&1, buf)?,
+            UpdatePing(_) => serialize_varint(&2, buf)?,
+            UpdateDisplayName(_) => serialize_varint(&3, buf)?,
+            RemovePlayer(_) => serialize_varint(&4, buf)?,
+        };
+
+        match self {
+            AddPlayer(players) => players.serialize(buf),
+            UpdateGameMode(game_modes) => game_modes.serialize(buf),
+            UpdatePing(pings) => pings.serialize(buf),
+            UpdateDisplayName(display_names) => display_names.serialize(buf),
+            RemovePlayer(players) => players.serialize(buf),
+        }
+    }
+}
+
 impl Serialize for crate::tcp::State {
     fn serialize(&self, buf: &mut dyn Write) -> io::Result<()> {
         match self {
