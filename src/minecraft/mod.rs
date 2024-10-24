@@ -14,6 +14,7 @@ use crate::{
 };
 
 pub mod packets;
+pub mod registry;
 
 pub trait Packet: Serialize + Deserialize + Debug + Any + Send + Sync {
     fn deserialize_packet(bytes: &[u8]) -> io::Result<Self>
