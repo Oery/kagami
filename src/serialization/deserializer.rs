@@ -125,7 +125,6 @@ impl Deserialize for Uuid {
         uuid_bytes[..8].copy_from_slice(&most_significant.to_be_bytes());
         uuid_bytes[8..].copy_from_slice(&least_significant.to_be_bytes());
         let uuid = Uuid::from_bytes(uuid_bytes);
-        dbg!(&uuid);
         Ok(uuid)
     }
 }
