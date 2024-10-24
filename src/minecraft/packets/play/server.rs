@@ -10,6 +10,7 @@ mod entity;
 mod entity_destroy;
 mod entity_head_rotation;
 mod entity_look;
+mod entity_metadata;
 mod entity_move_look;
 mod entity_relative_move;
 mod entity_status;
@@ -35,6 +36,7 @@ pub use entity::Entity;
 pub use entity_destroy::EntityDestroy;
 pub use entity_head_rotation::EntityHeadRotation;
 pub use entity_look::EntityLook;
+pub use entity_metadata::EntityMetadata;
 pub use entity_move_look::EntityMoveLook;
 pub use entity_relative_move::EntityRelativeMove;
 pub use entity_status::EntityStatus;
@@ -126,7 +128,9 @@ pub fn parse_packet(packet_id: i32, bytes: &[u8]) -> Result<Packets> {
         0x1B => Ok(Packets::AttachEntity(AttachEntity::deserialize_packet(
             bytes,
         )?)),
-
+        // 0x1C => Ok(Packets::EntityMetadata(EntityMetadata::deserialize_packet(
+        //     bytes,
+        // )?)),
         0x38 => Ok(Packets::PlayerInfo(PlayerInfo::deserialize_packet(bytes)?)),
 
         _ => Err(Error::new(
@@ -163,7 +167,7 @@ pub fn serialize_packet(packet: &Packets) -> Result<Vec<u8>> {
         Packets::EntityHeadRotation(packet) => packet.serialize_packet(),
         Packets::EntityStatus(packet) => packet.serialize_packet(),
         Packets::AttachEntity(packet) => packet.serialize_packet(),
-
+        // Packets::EntityMetadata(packet) => packet.serialize_packet(),
         Packets::PlayerInfo(packet) => packet.serialize_packet(),
 
         _ => panic!("Invalid packet: not a server play: {:#?}", packet),
