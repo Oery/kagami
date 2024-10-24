@@ -109,7 +109,7 @@ impl TypeIdMap {
         self.gen::<play::server::EntityStatus>(0x1A, Play, Server);
         self.gen::<play::server::AttachEntity>(0x1B, Play, Server);
         // self.gen::<play::server::EntityMetadata>(0x1C, Play, Server);
-        // self.gen::<play::server::EntityEffect>(0x1D, Play, Server);
+        self.gen::<play::server::EntityEffect>(0x1D, Play, Server);
         // self.gen::<play::server::RemoveEntityEffect>(0x1E, Play, Server);
         // self.gen::<play::server::Experience>(0x1F, Play, Server);
         // self.gen::<play::server::UpdateAttributes>(0x20, Play, Server);

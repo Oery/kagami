@@ -120,6 +120,7 @@ impl CallbackManager {
             Packets::EntityStatus(p) => p.handle_callbacks(&self.callbacks),
             Packets::AttachEntity(p) => p.handle_callbacks(&self.callbacks),
 
+            Packets::EntityEffect(p) => p.handle_callbacks(&self.callbacks),
             Packets::PlayerInfo(p) => p.handle_callbacks(&self.callbacks),
     }
 }

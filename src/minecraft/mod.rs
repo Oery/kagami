@@ -122,6 +122,7 @@ pub enum Packets {
     EntityHeadRotation(packets::play::server::EntityHeadRotation),
     EntityStatus(packets::play::server::EntityStatus),
     AttachEntity(packets::play::server::AttachEntity),
+    EntityEffect(packets::play::server::EntityEffect),
 
     PlayerInfo(packets::play::server::PlayerInfo),
 }

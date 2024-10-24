@@ -8,6 +8,7 @@ mod chat;
 mod collect;
 mod entity;
 mod entity_destroy;
+mod entity_effect;
 mod entity_head_rotation;
 mod entity_look;
 mod entity_metadata;
@@ -34,6 +35,7 @@ pub use chat::*;
 pub use collect::Collect;
 pub use entity::Entity;
 pub use entity_destroy::EntityDestroy;
+pub use entity_effect::EntityEffect;
 pub use entity_head_rotation::EntityHeadRotation;
 pub use entity_look::EntityLook;
 pub use entity_metadata::EntityMetadata;
@@ -131,6 +133,10 @@ pub fn parse_packet(packet_id: i32, bytes: &[u8]) -> Result<Packets> {
         // 0x1C => Ok(Packets::EntityMetadata(EntityMetadata::deserialize_packet(
         //     bytes,
         // )?)),
+        0x1D => Ok(Packets::EntityEffect(EntityEffect::deserialize_packet(
+            bytes,
+        )?)),
+
         0x38 => Ok(Packets::PlayerInfo(PlayerInfo::deserialize_packet(bytes)?)),
 
         _ => Err(Error::new(
@@ -168,6 +174,7 @@ pub fn serialize_packet(packet: &Packets) -> Result<Vec<u8>> {
         Packets::EntityStatus(packet) => packet.serialize_packet(),
         Packets::AttachEntity(packet) => packet.serialize_packet(),
         // Packets::EntityMetadata(packet) => packet.serialize_packet(),
+        Packets::EntityEffect(packet) => packet.serialize_packet(),
         Packets::PlayerInfo(packet) => packet.serialize_packet(),
 
         _ => panic!("Invalid packet: not a server play: {:#?}", packet),
