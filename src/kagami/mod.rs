@@ -5,6 +5,7 @@ use std::sync::Arc;
 use crate::kagami::callbacks::manager::CallbackManager;
 use crate::minecraft::{GlobalPacket, Packet};
 use crate::tcp::connection::handle_client_conn;
+use crate::tcp::context::Context;
 
 use callbacks::Actions;
 use tokio::net::TcpListener;
@@ -26,7 +27,7 @@ impl Kagami {
 
     pub fn register_callback<T: Packet + 'static>(
         &mut self,
-        callback: impl Fn(&mut T) -> Actions + Send + Sync + 'static,
+        callback: impl Fn(&mut Context<T>) -> Actions + Send + Sync + 'static,
     ) {
         self.callbacks.register(callback);
     }

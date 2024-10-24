@@ -182,3 +182,6 @@ impl Packets {
 pub struct GlobalPacket<'a> {
     pub packet: &'a Packets,
 }
+
+pub trait ServerPacket: Packet {}
+pub trait ClientPacket: Packet {}

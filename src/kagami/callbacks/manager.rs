@@ -1,5 +1,6 @@
 use crate::kagami::callbacks::{Actions, TypeIdMap};
 use crate::minecraft::{GlobalPacket, Packet, Packets};
+use crate::tcp::context::{Client, Context, Server};
 
 use std::any::{Any, TypeId};
 use std::collections::HashMap;
@@ -8,15 +9,17 @@ pub trait PacketCallback: Send + Sync {
     fn call(&self, packet: &mut dyn Any) -> std::io::Result<Actions>;
 }
 
+type CallbackFn<T> = dyn Fn(&mut Context<T>) -> Actions + Send + Sync;
+
 struct TypedCallback<T: Packet> {
-    callback: Box<dyn Fn(&mut T) -> Actions + Send + Sync>,
+    callback: Box<CallbackFn<T>>,
     _phantom: std::marker::PhantomData<T>,
 }
 
 impl<T: Packet> TypedCallback<T> {
     fn new<F>(callback: F) -> Self
     where
-        F: Fn(&mut T) -> Actions + 'static + Send + Sync,
+        F: Fn(&mut Context<T>) -> Actions + 'static + Send + Sync,
     {
         Self {
             callback: Box::new(callback),
@@ -27,10 +30,15 @@ impl<T: Packet> TypedCallback<T> {
 
 impl<T: Packet + 'static> PacketCallback for TypedCallback<T> {
     fn call(&self, packet: &mut dyn Any) -> std::io::Result<Actions> {
-        match packet
-            .downcast_mut::<T>()
-            .map(|packet| (self.callback)(packet))
-        {
+        let tx = std::sync::mpsc::channel::<Vec<u8>>().0;
+
+        match packet.downcast_mut::<T>().map(|packet| {
+            (self.callback)(&mut Context {
+                packet,
+                client: Client { tx: tx.clone() },
+                server: Server { tx: tx.clone() },
+            })
+        }) {
             Some(action) => Ok(action),
             None => panic!("Failed to downcast packet"),
         }
@@ -50,7 +58,7 @@ impl CallbackManager {
     pub fn register<T, F>(&mut self, callback: F)
     where
         T: Packet + 'static,
-        F: Fn(&mut T) -> Actions + 'static + Send + Sync,
+        F: Fn(&mut Context<T>) -> Actions + 'static + Send + Sync,
     {
         let typed_callback = TypedCallback::new(callback);
         self.callbacks
