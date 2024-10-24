@@ -85,6 +85,13 @@ pub async fn process_packets(
                         raw_packet.1.clear();
                     }
                     Actions::Modify => {
+                        // If the user modify display_name without properly setting has_display_name, the client will crash, we make sure both fields match
+                        if let Packets::PlayerInfo(ref mut packet) = packet {
+                            for player in &mut packet.data {
+                                player.has_display_name = Some(player.display_name.is_some());
+                            }
+                        }
+
                         let (ref mut length, ref mut data) = raw_packet;
                         let packet_data =
                             Packets::serialize_packet(packet, &state, origin).unwrap();
