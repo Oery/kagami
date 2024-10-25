@@ -4,5 +4,5 @@ use kagami_macro::{packet, Deserialize, Packet, Serialize};
 
 #[packet]
 pub struct SpawnPosition {
-    position: Position,
+    pub position: Position,
 }

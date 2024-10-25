@@ -5,5 +5,5 @@ use kagami_macro::{packet, Deserialize, Packet, Serialize};
 #[packet]
 pub struct EntityDestroy {
     #[encoding("varint")]
-    entity_ids: Vec<i32>,
+    pub entity_ids: Vec<i32>,
 }

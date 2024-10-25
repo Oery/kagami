@@ -5,6 +5,6 @@ use kagami_macro::{packet, Deserialize, Packet, Serialize};
 #[packet]
 pub struct EntityHeadRotation {
     #[encoding("varint")]
-    entity_id: i32,
-    head_yaw: i8,
+    pub entity_id: i32,
+    pub head_yaw: i8,
 }

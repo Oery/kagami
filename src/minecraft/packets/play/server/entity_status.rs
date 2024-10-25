@@ -3,6 +3,6 @@ use kagami_macro::{packet, Deserialize, Packet, Serialize};
 
 #[packet]
 pub struct EntityStatus {
-    entity_id: i32,
-    entity_status: i8,
+    pub entity_id: i32,
+    pub entity_status: i8,
 }

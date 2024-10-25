@@ -5,8 +5,8 @@ use kagami_macro::{packet, Deserialize, Packet, Serialize};
 #[packet]
 pub struct EntityVelocity {
     #[encoding("varint")]
-    entity_id: i32,
-    velocity_x: i16,
-    velocity_y: i16,
-    velocity_z: i16,
+    pub entity_id: i32,
+    pub velocity_x: i16,
+    pub velocity_y: i16,
+    pub velocity_z: i16,
 }

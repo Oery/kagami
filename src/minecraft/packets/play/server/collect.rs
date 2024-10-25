@@ -5,7 +5,7 @@ use kagami_macro::{packet, Deserialize, Packet, Serialize};
 #[packet]
 pub struct Collect {
     #[encoding("varint")]
-    collected_entity_id: i32,
+    pub collected_entity_id: i32,
     #[encoding("varint")]
-    collector_entity_id: i32,
+    pub collector_entity_id: i32,
 }

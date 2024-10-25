@@ -6,10 +6,10 @@ use kagami_macro::{packet, Deserialize, Packet, Serialize};
 #[packet]
 pub struct EntityEffect {
     #[encoding("varint")]
-    entity_id: i32,
-    effect: PotionEffects,
-    amplifier: i8,
+    pub entity_id: i32,
+    pub effect: PotionEffects,
+    pub amplifier: i8,
     #[encoding("varint")]
-    duration: i32,
-    hide_particles: bool,
+    pub duration: i32,
+    pub hide_particles: bool,
 }

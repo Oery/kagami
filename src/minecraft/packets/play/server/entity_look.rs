@@ -5,8 +5,8 @@ use kagami_macro::{packet, Deserialize, Packet, Serialize};
 #[packet]
 pub struct EntityLook {
     #[encoding("varint")]
-    entity_id: i32,
-    yaw: i8,
-    pitch: i8,
-    on_ground: bool,
+    pub entity_id: i32,
+    pub yaw: i8,
+    pub pitch: i8,
+    pub on_ground: bool,
 }

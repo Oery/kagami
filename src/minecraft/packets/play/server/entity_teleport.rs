@@ -5,11 +5,11 @@ use kagami_macro::{packet, Deserialize, Packet, Serialize};
 #[packet]
 pub struct EntityTeleport {
     #[encoding("varint")]
-    entity_id: i32,
-    x: i32,
-    y: i32,
-    z: i32,
-    yaw: i8,
-    pitch: i8,
-    on_ground: bool,
+    pub entity_id: i32,
+    pub x: i32,
+    pub y: i32,
+    pub z: i32,
+    pub yaw: i8,
+    pub pitch: i8,
+    pub on_ground: bool,
 }

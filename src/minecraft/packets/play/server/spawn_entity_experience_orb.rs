@@ -7,12 +7,12 @@ use kagami_macro::{packet, Deserialize, Packet, Serialize};
 #[packet]
 pub struct SpawnEntityExperienceOrb {
     #[encoding("varint")]
-    entity_id: i32,
+    pub entity_id: i32,
     #[encoding("fixed_point")]
-    x: f64,
+    pub x: f64,
     #[encoding("fixed_point")]
-    y: f64,
+    pub y: f64,
     #[encoding("fixed_point")]
-    z: f64,
-    count: i16,
+    pub z: f64,
+    pub count: i16,
 }

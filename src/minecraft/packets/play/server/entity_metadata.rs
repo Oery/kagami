@@ -5,9 +5,9 @@ use kagami_macro::{packet, Deserialize, Packet, Serialize};
 #[packet]
 pub struct EntityMetadata {
     #[encoding("varint")]
-    entity_id: i32,
-    metadata: Vec<Metadata>,
+    pub entity_id: i32,
+    pub metadata: Vec<Metadata>,
 }
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
-struct Metadata {}
+pub struct Metadata {}

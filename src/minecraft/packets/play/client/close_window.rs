@@ -3,5 +3,5 @@ use kagami_macro::{packet, Deserialize, Packet, Serialize};
 
 #[packet]
 pub struct CloseWindow {
-    window_id: u8,
+    pub window_id: u8,
 }

@@ -5,8 +5,8 @@ use kagami_macro::{packet, Deserialize, Packet, Serialize};
 #[packet]
 pub struct SpawnEntityPainting {
     #[encoding("varint")]
-    entity_id: i32,
-    title: String,
-    location: Position,
-    direction: u8,
+    pub entity_id: i32,
+    pub title: String,
+    pub location: Position,
+    pub direction: u8,
 }

@@ -3,7 +3,7 @@ use kagami_macro::{packet, Deserialize, Packet, Serialize};
 
 #[packet]
 pub struct AttachEntity {
-    entity_id: i32,
-    vehicle_id: i32,
-    leash: bool,
+    pub entity_id: i32,
+    pub vehicle_id: i32,
+    pub leash: bool,
 }

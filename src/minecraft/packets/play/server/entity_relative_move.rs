@@ -5,9 +5,9 @@ use kagami_macro::{packet, Deserialize, Packet, Serialize};
 #[packet]
 pub struct EntityRelativeMove {
     #[encoding("varint")]
-    entity_id: i32,
-    d_x: i8,
-    d_y: i8,
-    d_z: i8,
-    on_ground: bool,
+    pub entity_id: i32,
+    pub d_x: i8,
+    pub d_y: i8,
+    pub d_z: i8,
+    pub on_ground: bool,
 }
