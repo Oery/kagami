@@ -135,4 +135,3 @@ Also, if you edit packets, you're directly changing the source of truth which me
   - [ ] Reverse Proxy mode
   - [ ] Multi-version support
   - [ ] Deep Performance optimizations
-  - [ ] Mobile support
