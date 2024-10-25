@@ -101,6 +101,7 @@ pub enum Packets {
     ServerKeepAlive(packets::play::server::KeepAlive),
     Login(packets::play::server::Login),
     UpdateTime(packets::play::server::UpdateTime),
+    SpawnPosition(packets::play::server::SpawnPosition),
     UpdateHealth(packets::play::server::UpdateHealth),
     Respawn(packets::play::server::Respawn),
     ServerPosition(packets::play::server::Position),

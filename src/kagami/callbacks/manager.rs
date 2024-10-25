@@ -105,6 +105,7 @@ impl CallbackManager {
             Packets::ServerKeepAlive(p) => p.handle_callbacks(&self.callbacks),
             Packets::ServerChat(p) => p.handle_callbacks(&self.callbacks),
             Packets::UpdateTime(p) => p.handle_callbacks(&self.callbacks),
+            Packets::SpawnPosition(p) => p.handle_callbacks(&self.callbacks),
             Packets::UpdateHealth(p) => p.handle_callbacks(&self.callbacks),
             Packets::Login(p) => p.handle_callbacks(&self.callbacks),
             Packets::Respawn(p) => p.handle_callbacks(&self.callbacks),

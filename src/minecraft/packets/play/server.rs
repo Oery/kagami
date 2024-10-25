@@ -25,6 +25,7 @@ mod position;
 mod respawn;
 mod spawn_entity_experience_orb;
 mod spawn_entity_painting;
+mod spawn_position;
 mod update_health;
 mod update_time;
 
@@ -52,6 +53,7 @@ pub use position::Position;
 pub use respawn::Respawn;
 pub use spawn_entity_experience_orb::SpawnEntityExperienceOrb;
 pub use spawn_entity_painting::SpawnEntityPainting;
+pub use spawn_position::SpawnPosition;
 pub use update_health::UpdateHealth;
 pub use update_time::UpdateTime;
 
@@ -68,10 +70,9 @@ pub fn parse_packet(packet_id: i32, bytes: &[u8]) -> Result<Packets> {
         // 0x04 => Ok(Packets::EntityEquipment(EntityEquipment::deserialize_packet(
         //     bytes,
         // )?)),
-
-        // 0x05 => Ok(Packets::SpawnPosition(SpawnPosition::deserialize_packet(
-        //     bytes,
-        // )?)),
+        0x05 => Ok(Packets::SpawnPosition(SpawnPosition::deserialize_packet(
+            bytes,
+        )?)),
         0x06 => Ok(Packets::UpdateHealth(UpdateHealth::deserialize_packet(
             bytes,
         )?)),
