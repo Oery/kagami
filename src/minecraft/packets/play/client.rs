@@ -25,7 +25,7 @@ pub use look::Look;
 pub use position::Position;
 pub use position_and_look::PositionAndLook;
 pub use transaction::Transaction;
-pub use use_entity::UseEntity;
+pub use use_entity::*;
 
 pub fn parse_packet(packet_id: i32, bytes: &[u8]) -> Result<Packets> {
     match packet_id {
