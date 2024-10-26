@@ -7,6 +7,8 @@ use packets::{handshake, login, play, status};
 
 use crate::kagami::callbacks::manager::PacketCallback;
 use crate::kagami::callbacks::Actions;
+use crate::serialization::ToVarInt;
+use crate::tcp::utils::RawPacket;
 use crate::tcp::State;
 use crate::{
     serialization::{deserialize, Deserialize, Serialize},
@@ -25,15 +27,24 @@ pub trait Packet: Serialize + Deserialize + Debug + Any + Send + Sync {
         Ok(packet)
     }
 
-    fn serialize_packet(&self) -> io::Result<Vec<u8>> {
-        let mut writer = std::io::Cursor::new(Vec::new());
-        self.serialize(&mut writer)?;
-        Ok(writer.into_inner())
+    fn serialize_packet(&self) -> io::Result<RawPacket> {
+        let mut raw_packet = RawPacket::default();
+        let (ref mut length, ref mut data) = &mut raw_packet;
+
+        data.push(0x00); // TODO: Implement compression
+        data.push(self.get_id());
+
+        self.serialize(data)?;
+
+        *length = (data.len() as i32).to_varint()?;
+        Ok(raw_packet)
     }
 
     // The origin is inferred from the module path
     // The method is implemented by a macro
     fn get_origin(&self) -> Origin;
+
+    fn get_id(&self) -> u8;
 
     fn handle_callbacks(
         &mut self,

@@ -1,4 +1,5 @@
 use crate::minecraft::{Packet, Packets};
+use crate::tcp::utils::RawPacket;
 use std::io::{Error, ErrorKind, Result};
 
 mod legacy_server_list_ping;
@@ -21,7 +22,7 @@ pub fn parse_packet(packet_id: i32, bytes: &[u8]) -> Result<Packets> {
     }
 }
 
-pub fn serialize_packet(packet: &Packets) -> Result<Vec<u8>> {
+pub fn serialize_packet(packet: &Packets) -> Result<RawPacket> {
     match packet {
         Packets::SetProtocol(packet) => packet.serialize_packet(),
         Packets::LegacyServerListPing(packet) => packet.serialize_packet(),

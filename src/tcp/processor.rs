@@ -85,22 +85,7 @@ pub async fn process_packets(
                         raw_packet.1.clear();
                     }
                     Actions::Modify => {
-                        let (ref mut length, ref mut data) = raw_packet;
-                        let packet_data =
-                            Packets::serialize_packet(packet, &state, origin).unwrap();
-                        data.clear();
-                        match packet {
-                            Packets::ServerInfo(_) => {}
-                            _ => {
-                                data.push(0);
-                            }
-                        }
-                        let varint = packet_id.to_varint().unwrap();
-                        data.extend_from_slice(&varint);
-                        data.extend_from_slice(&packet_data);
-                        length.clear();
-                        let varint = (data.len() as i32).to_varint().unwrap();
-                        length.extend_from_slice(&varint);
+                        *raw_packet = Packets::serialize_packet(packet, &state, origin).unwrap();
                     }
                 };
             }

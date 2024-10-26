@@ -1,4 +1,5 @@
 use crate::minecraft::{Packet, Packets};
+use crate::tcp::utils::RawPacket;
 use std::io::{Error, ErrorKind, Result};
 
 mod arm_animation;
@@ -72,7 +73,7 @@ pub fn parse_packet(packet_id: i32, bytes: &[u8]) -> Result<Packets> {
     }
 }
 
-pub fn serialize_packet(packet: &Packets) -> Result<Vec<u8>> {
+pub fn serialize_packet(packet: &Packets) -> Result<RawPacket> {
     match packet {
         Packets::ClientKeepAlive(packet) => packet.serialize_packet(),
         Packets::ClientChat(packet) => packet.serialize_packet(),

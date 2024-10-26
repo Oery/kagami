@@ -1,4 +1,5 @@
 use crate::minecraft::{Packet, Packets};
+use crate::tcp::utils::RawPacket;
 use std::io::{Error, ErrorKind, Result};
 
 mod encryption_begin;
@@ -15,7 +16,7 @@ pub fn parse_packet(packet_id: i32, bytes: &[u8]) -> Result<Packets> {
     }
 }
 
-pub fn serialize_packet(packet: &Packets) -> Result<Vec<u8>> {
+pub fn serialize_packet(packet: &Packets) -> Result<RawPacket> {
     match packet {
         Packets::LoginStart(packet) => packet.serialize_packet(),
         // Packets::EncryptionBegin(packet) => packet.serialize_packet(),
