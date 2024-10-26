@@ -1,9 +1,9 @@
 use crate::minecraft::registry::PotionEffects;
 use crate::minecraft::Packet;
 use crate::serialization::{deserialize_varint, serialize_varint};
-use kagami_macro::{packet, Deserialize, Packet, Serialize};
+use kagami_macro::{packet, Deserialize, Serialize};
 
-#[packet]
+#[packet(0x1D)]
 pub struct EntityEffect {
     #[encoding("varint")]
     pub entity_id: i32,

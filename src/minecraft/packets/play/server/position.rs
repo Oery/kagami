@@ -1,7 +1,7 @@
 use crate::minecraft::Packet;
-use kagami_macro::{packet, Deserialize, Packet, Serialize};
+use kagami_macro::{packet, Deserialize, Serialize};
 
-#[packet]
+#[packet(0x08)]
 pub struct Position {
     pub x: f64,
     pub y: f64,

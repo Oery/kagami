@@ -1,11 +1,21 @@
 use crate::minecraft::Packet;
 use crate::serialization::{deserialize_varint, serialize_varint, Deserialize, Serialize};
-use kagami_macro::{Deserialize, Packet, Serialize};
+use kagami_macro::{Deserialize, Serialize};
 use uuid::Uuid;
 
-#[derive(Packet, Debug, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, PartialEq, Serialize, Deserialize)]
 pub struct PlayerInfo {
     pub action: PlayerInfoAction,
+}
+
+impl Packet for PlayerInfo {
+    fn get_id(&self) -> u8 {
+        0x38
+    }
+
+    fn get_origin(&self) -> crate::tcp::Origin {
+        crate::tcp::Origin::Client
+    }
 }
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]

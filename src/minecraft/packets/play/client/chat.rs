@@ -1,7 +1,9 @@
-use crate::minecraft::Packet;
-use kagami_macro::{packet, Deserialize, Packet, Serialize};
+use crate::minecraft::{ClientPacket, Packet};
+use kagami_macro::{packet, Deserialize, Serialize};
 
-#[packet]
+#[packet(0x01)]
 pub struct Chat {
     pub message: String,
 }
+
+impl ClientPacket for Chat {}

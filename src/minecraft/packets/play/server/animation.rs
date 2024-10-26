@@ -1,10 +1,10 @@
 use crate::minecraft::Packet;
 use crate::serialization::{deserialize_varint, serialize_varint};
-use kagami_macro::{packet, Deserialize, Packet, Serialize};
+use kagami_macro::{packet, Deserialize, Serialize};
 
 use byteorder::{ReadBytesExt, WriteBytesExt};
 
-#[packet]
+#[packet(0x0B)]
 pub struct Animation {
     #[encoding("varint")]
     pub entity_id: i32,

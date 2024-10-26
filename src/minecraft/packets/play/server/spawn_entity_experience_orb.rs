@@ -2,9 +2,9 @@ use crate::minecraft::Packet;
 use crate::serialization::{
     deserialize_fixed_point, deserialize_varint, serialize_fixed_point, serialize_varint,
 };
-use kagami_macro::{packet, Deserialize, Packet, Serialize};
+use kagami_macro::{packet, Deserialize, Serialize};
 
-#[packet]
+#[packet(0x11)]
 pub struct SpawnEntityExperienceOrb {
     #[encoding("varint")]
     pub entity_id: i32,

@@ -1,7 +1,7 @@
 use crate::minecraft::Packet;
-use kagami_macro::{packet, Deserialize, Packet, Serialize};
+use kagami_macro::{packet, Deserialize, Serialize};
 
-#[packet]
+#[packet(0x00)]
 pub struct LoginStart {
     pub username: String,
 }

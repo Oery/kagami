@@ -1,8 +1,8 @@
 use crate::minecraft::Packet;
 use crate::serialization::{deserialize_varint, serialize_varint, Position};
-use kagami_macro::{packet, Deserialize, Packet, Serialize};
+use kagami_macro::{packet, Deserialize, Serialize};
 
-#[packet]
+#[packet(0x10)]
 pub struct SpawnEntityPainting {
     #[encoding("varint")]
     pub entity_id: i32,
