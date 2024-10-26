@@ -137,6 +137,8 @@ pub enum Packets {
     EntityEffect(packets::play::server::EntityEffect),
 
     PlayerInfo(packets::play::server::PlayerInfo),
+
+    KickDisconnect(packets::play::server::KickDisconnect),
 }
 
 impl Packets {

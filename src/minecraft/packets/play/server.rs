@@ -20,6 +20,7 @@ mod entity_teleport;
 mod entity_velocity;
 mod held_item_slot;
 mod keep_alive;
+mod kick_disconnect;
 mod login;
 mod player_info;
 mod position;
@@ -48,6 +49,7 @@ pub use entity_teleport::EntityTeleport;
 pub use entity_velocity::EntityVelocity;
 pub use held_item_slot::HeldItemSlot;
 pub use keep_alive::KeepAlive;
+pub use kick_disconnect::KickDisconnect;
 pub use login::Login;
 pub use player_info::*;
 pub use position::Position;
@@ -141,6 +143,10 @@ pub fn parse_packet(packet_id: i32, bytes: &[u8]) -> Result<Packets> {
 
         0x38 => Ok(Packets::PlayerInfo(PlayerInfo::deserialize_packet(bytes)?)),
 
+        0x40 => Ok(Packets::KickDisconnect(KickDisconnect::deserialize_packet(
+            bytes,
+        )?)),
+
         _ => Err(Error::new(
             ErrorKind::InvalidData,
             format!("Unknown packet id : {}", packet_id),
@@ -178,6 +184,7 @@ pub fn serialize_packet(packet: &Packets) -> Result<RawPacket> {
         // Packets::EntityMetadata(packet) => packet.serialize_packet(),
         Packets::EntityEffect(packet) => packet.serialize_packet(),
         Packets::PlayerInfo(packet) => packet.serialize_packet(),
+        Packets::KickDisconnect(packet) => packet.serialize_packet(),
 
         _ => panic!("Invalid packet: not a server play: {:#?}", packet),
     }
