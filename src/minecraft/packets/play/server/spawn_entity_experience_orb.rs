@@ -4,7 +4,7 @@ use crate::serialization::{
 };
 use kagami_macro::{packet, Deserialize, Serialize};
 
-#[packet(0x11)]
+#[packet(0x11, server)]
 pub struct SpawnEntityExperienceOrb {
     #[encoding("varint")]
     pub entity_id: i32,

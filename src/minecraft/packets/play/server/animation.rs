@@ -4,7 +4,7 @@ use kagami_macro::{packet, Deserialize, Serialize};
 
 use byteorder::{ReadBytesExt, WriteBytesExt};
 
-#[packet(0x0B)]
+#[packet(0x0B, server)]
 pub struct Animation {
     #[encoding("varint")]
     pub entity_id: i32,

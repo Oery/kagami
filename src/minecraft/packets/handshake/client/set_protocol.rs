@@ -3,7 +3,7 @@ use crate::serialization::{deserialize_varint, serialize_varint};
 use crate::tcp::State;
 use kagami_macro::{packet, Deserialize, Serialize};
 
-#[packet(0x00)]
+#[packet(0x00, client)]
 pub struct SetProtocol {
     #[encoding("varint")]
     pub protocol_version: i32,

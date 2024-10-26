@@ -2,7 +2,7 @@ use crate::minecraft::Packet;
 use crate::serialization::{deserialize_varint, serialize_varint};
 use kagami_macro::{packet, Deserialize, Serialize};
 
-#[packet(0x17)]
+#[packet(0x17, server)]
 pub struct EntityMoveLook {
     #[encoding("varint")]
     pub entity_id: i32,

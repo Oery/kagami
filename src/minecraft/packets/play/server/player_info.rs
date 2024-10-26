@@ -1,4 +1,4 @@
-use crate::minecraft::Packet;
+use crate::minecraft::{Packet, ServerPacket};
 use crate::serialization::{deserialize_varint, serialize_varint, Deserialize, Serialize};
 use kagami_macro::{Deserialize, Serialize};
 use uuid::Uuid;
@@ -17,6 +17,8 @@ impl Packet for PlayerInfo {
         crate::tcp::Origin::Client
     }
 }
+
+impl ServerPacket for PlayerInfo {}
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 pub struct Property {

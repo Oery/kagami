@@ -1,7 +1,7 @@
 use crate::minecraft::Packet;
 use kagami_macro::{packet, Deserialize, Serialize};
 
-#[packet(0x06)]
+#[packet(0x06, client)]
 pub struct PositionAndLook {
     pub x: f64,
     pub y: f64,
