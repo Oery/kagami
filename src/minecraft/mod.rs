@@ -135,6 +135,7 @@ pub enum Packets {
     EntityStatus(packets::play::server::EntityStatus),
     AttachEntity(packets::play::server::AttachEntity),
     EntityEffect(packets::play::server::EntityEffect),
+    RemoveEntityEffect(packets::play::server::RemoveEntityEffect),
 
     PlayerInfo(packets::play::server::PlayerInfo),
 
