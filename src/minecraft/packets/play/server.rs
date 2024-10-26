@@ -32,7 +32,7 @@ mod spawn_position;
 mod update_health;
 mod update_time;
 
-pub use animation::Animation;
+pub use animation::*;
 pub use attach_entity::AttachEntity;
 pub use bed::Bed;
 pub use chat::*;
