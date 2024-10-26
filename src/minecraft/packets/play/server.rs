@@ -24,6 +24,7 @@ mod kick_disconnect;
 mod login;
 mod player_info;
 mod position;
+mod remove_entity_effect;
 mod respawn;
 mod spawn_entity_experience_orb;
 mod spawn_entity_painting;
@@ -53,6 +54,7 @@ pub use kick_disconnect::KickDisconnect;
 pub use login::Login;
 pub use player_info::*;
 pub use position::Position;
+pub use remove_entity_effect::RemoveEntityEffect;
 pub use respawn::Respawn;
 pub use spawn_entity_experience_orb::SpawnEntityExperienceOrb;
 pub use spawn_entity_painting::SpawnEntityPainting;
@@ -140,6 +142,9 @@ pub fn parse_packet(packet_id: i32, bytes: &[u8]) -> Result<Packets> {
         0x1D => Ok(Packets::EntityEffect(EntityEffect::deserialize_packet(
             bytes,
         )?)),
+        0x1E => Ok(Packets::RemoveEntityEffect(
+            RemoveEntityEffect::deserialize_packet(bytes)?,
+        )),
 
         0x38 => Ok(Packets::PlayerInfo(PlayerInfo::deserialize_packet(bytes)?)),
 
@@ -185,6 +190,7 @@ pub fn serialize_packet(packet: &Packets) -> Result<RawPacket> {
         Packets::EntityEffect(packet) => packet.serialize_packet(),
         Packets::PlayerInfo(packet) => packet.serialize_packet(),
         Packets::KickDisconnect(packet) => packet.serialize_packet(),
+        Packets::RemoveEntityEffect(packet) => packet.serialize_packet(),
 
         _ => panic!("Invalid packet: not a server play: {:#?}", packet),
     }
